@@ -1,0 +1,13 @@
+<div class="lui-popover" style="height:358px;">
+  <div class="lui-popover__header">
+    From a list
+  </div>
+  <div class="lui-popover__body lui-nopad" style="padding:0px;height:250px;overflow:scroll">
+    <ul class="lui-list">
+      <li class="lui-list__item list-d.id" ng-repeat="d in analysisCategories" ng-click="drilldownAnalysisCategory(d.id)">
+        <span class="lui-list__text lui-list__action">{{d.name}}</span>
+        <i class="object-add-popover-toogle-step2-icon  lui-list__aside lui-icon  lui-icon--triangle-right"></i>
+      </li>
+    </ul>
+  </div>
+</div>

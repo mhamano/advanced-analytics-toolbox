@@ -1,0 +1,16 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    linebreak-style: ["error", "windows"],
+    arrow-body-style: ["error", "always"]
+  },
+    "globals": {
+    "describe"   : false,
+    "it"         : false,
+    "before"     : false,
+    "after"       : false,
+    "beforeEach"  : false,
+    "afterEach"  : false,
+    "expect"   : false,
+  },
+}

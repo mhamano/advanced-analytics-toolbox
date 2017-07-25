@@ -1,0 +1,16 @@
+{
+	"name": "Advanced Analytics Toolbox",
+	"description": "Chart visualization template",
+	"icon": "bar-chart-horizontal",
+	"type": "visualization",
+	"preview" : "./lib/images/icon.png",
+	"version": "0.9.0",
+	"author": "",
+	"homepage": "",
+	"keywords": "qlik-sense, visualization, advanced analytics, statistics",
+	"license": "MIT",
+	"repository": "https://github.com/mhamano/advanced-analytics-toolbox",
+	"dependencies": {
+		"qlik-sense": ">=3.2.x"
+	}
+}
