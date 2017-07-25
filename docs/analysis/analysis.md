@@ -11,10 +11,10 @@
   * [Correlation matrix heatmap](correlation_heatmap.md) - Displays correlation matrix heatmap.
 
 * Statistical hypothesis testing
-  * [F-Test](f-test.md) - Performs an F-Test to compare the variances of two samples.
-  * [T-Test - Two sample T-Test](t-test.md) - Performs test to examine if two independent samples' means are equal assuming that their variance are equal
-  * [T-Test - Welch two sample T-Test](t-test.md) - Performs test to examine if two independent samples' means are equal assuming that their variance are not equal
-  * [T-Test - Paired T-Test](t-test.md) - Performs test to examine if two paired samples' means are equal
+  * [F-Test](f_test.md) - Performs an F-Test to compare the variances of two samples.
+  * [T-Test - Two sample T-Test](t_test.md) - Performs test to examine if two independent samples' means are equal assuming that their variance are equal
+  * [T-Test - Welch two sample T-Test](t_test.md) - Performs test to examine if two independent samples' means are equal assuming that their variance are not equal
+  * [T-Test - Paired T-Test](t_test.md) - Performs test to examine if two paired samples' means are equal
 
 * Variance Analysis
   * [Anova - Single factor](anova.md) - Computes analysis of variance to determine whether the means of datasets are different.
