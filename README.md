@@ -9,10 +9,10 @@ The analysis types provides in this extension covers linear regression analysis,
 
 ## Prerequisites
  * Install Qlik Sense. (Qlik Sense June 2017 release or later)
- * Install SSE R-plugin. Follow the instruction on the [SSE R-plugin Github project](https://github.com/qlik-oss/sse-r-plugin). The installation of SSE R-plugin also requires the installation of R and RSserve. Assure if it is installed and configured correctly by testing with the sample apps included in the SSE R-plugin. You are also able to find resources on [Qlik Community - Advanced Analytics Integration](https://community.qlik.com/community/advanced-analytics-integrationhttps://community.qlik.com/community/advanced-analytics-integration)
+ * Install SSE R-plugin. Follow the instruction on the [SSE R-plugin Github project](https://github.com/qlik-oss/sse-r-plugin). The installation of SSE R-plugin also requires the installation of R and RSserve. Assure if it is installed and configured correctly by testing with the sample apps included in the SSE R-plugin. You are also able to find resources on [Qlik Community - Advanced Analytics Integration](https://community.qlik.com/community/advanced-analytics-integration)
 
 ## Installation
-1. Download the latest version of Qlik Sense Advanced Analytics Toolbox extension from [releases](http://github.com/mhamano/advanced-analytics-toolbox/releases).
+1. Download the latest version of Qlik Sense Advanced Analytics Toolbox extension from [releases](https://github.com/mhamano/advanced-analytics-toolbox/releases).
 2. Install extension:
   * Qlik Sense Desktop
 	 * To install, copy the folder included the .zip file to folder "C:\Users\[%Username%]\Documents\Qlik\Sense\Extensions\".
@@ -29,7 +29,7 @@ Refer to the usage and examples included on each analysis type page linked from 
  * Fields cannot be added by dragging and dropping them onto this extension.
  * This extension cannot be exported as a PDF. Chart image can be downloaded by clicking [Download plot as a png] button placed on the top of a chart area.
  * The exported data format into excel file might not represent the data format shown on the chart or table of the extension. (For instance, the calculation result of some analysis types is returned from R to Qlik Sense hypercube in json format, and the data in json is displayed on chart or table after transformations. In this case, the exported data format is in the json format, not in the tabular format.) It is considered to provide an option to display data in a table format and to export data from it as a future plan.
- * The syntax of custom number format is based on the d3-format, not on the standard Qlik Sense number format. (https://github.com/d3/d3-format/blob/master/README.md#d3-format).
+ * The syntax of custom number format is based on the [d3-format](https://github.com/d3/d3-format/blob/master/README.md#d3-format), not on the standard Qlik Sense number format.
  * The number formatting other than thousand separator = "," and decimal separator = "." is not currently working.
 
 The followings are not limitations, but need to be taken into consideration to get an expected calculation results.
@@ -42,11 +42,11 @@ The followings are not limitations, but need to be taken into consideration to g
 ## Author
 
 **Masaki Hamano**
-* http://github.com/mhamano/
+* https://github.com/mhamano/
 
 ## Change Log
 
-See [CHANGELOG](CHANGELOG.md)
+See [releases](https://github.com/mhamano/advanced-analytics-toolbox/releases).
 
 ## License & Copyright
 The software is made available "AS IS" without any warranty of any kind under the MIT License (MIT).
