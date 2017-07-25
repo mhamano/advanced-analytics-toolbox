@@ -1,8 +1,8 @@
 {
-  "name": "advanced-analytics-toolsets",
+  "name": "advanced-analytics-toolbox",
   "version": "1.0.0",
   "description": "",
-  "main": "advanced-analytics-toolsets.js",
+  "main": "advanced-analytics-toolbox.js",
   "scripts": {
     "test": ".\\node_modules\\.bin\\mocha -u bdd -R spec -t 10000 --require should --watch"
   },
