@@ -3,9 +3,6 @@ Qlik Sense extension which allows you to create charts to perform advanced analy
 
 The analysis types provides in this extension covers linear regression analysis, statistical hypothesis testing, variance analysis, principal component analysis (PCA), time series analysis, clustering, text mining, etc. The full list of the analysis types is available on the [Analysis Types](./docs/analysis/analysis.md) page.
 
-
-> :heavy_exclamation_mark: Download the zipped extension file from [releases](https://github.com/mhamano/advanced-analytics-toolbox/releases) page. The zipped file downloaded by clicking "Clone or download" button on this page does not work without being transcompiled with Gulp. Also, read [Prerequisites](#prerequisites) and [Installation](#installation) carefully to make the extension work properly.
-
 ## Screenshots
 ![sample screenshot](./docs/analysis/images/sample1.png)
 ![sample screenshot](./docs/analysis/images/sample2.png)
