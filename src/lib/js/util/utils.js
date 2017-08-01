@@ -1,6 +1,6 @@
 define([
-  '../../vendor/numeral.min'
-], (numeral) => {
+  '../../vendor/d3-format.min',
+], (d3) => {
   return {
 
     /**
@@ -115,19 +115,6 @@ define([
 
       return result;
     },
-
-    /**
-     * format - Format number data using numeral.js
-     *
-     * @param {Number} number number value
-     * @param {String} format number format string
-     *
-     * @return {Number} Formatted number value
-     */
-    format(number, format) {
-      return numeral(number).format(format);
-    },
-
     /**
      * getTickFormat - Retrieve number format settings from a measure and return number format string
      *
@@ -188,7 +175,6 @@ define([
       }
       return result;
     },
-
     /**
      * getSeparators - Get and return separators value from the locale setting
      *
@@ -244,6 +230,65 @@ define([
         result = (typeof measure.customCurrency == 'undefined') ? '$' : measure.customCurrency;
       }
       return result;
+    },
+    /**
+     * getNumberFormat - This is a wrapper function of getTickFormat. This is used to
+     *                   fill the gap between the handling on formatting by plotly.js and d3-format.
+     *
+     * @param {Object} $scope    angular $scope
+     * @param {Number} measureId Measure ID
+     *
+     * @return {String} Number format string
+     */
+    getNumberFormat($scope, measureId) {
+      const layout = $scope.layout;
+      const measure = layout.props.measures[measureId];
+      const numberFormatting = layout.props.measures[measureId].numberFormatting;
+      let result = this.getTickFormat($scope, measureId);
+
+      // Default formatting
+      if (result === '') {
+        result = '.2s';
+      }
+
+      // Money formatting
+      if (numberFormatting == '2') {
+        result = '$' + result;
+      }
+
+      return result;
+    },
+    /**
+     * getLocale - Description
+     *
+     * @param {Object} $scope    angular $scope
+     * @param {Number} measureId Measure ID
+     *
+     * @return {Object} locale format data of d3-format
+     */
+    getLocale($scope, measureId) {
+      const layout = $scope.layout;
+      const measure = layout.props.measures[measureId];
+      const numberFormatting = layout.props.measures[measureId].numberFormatting;
+
+      let currency = ['$', ''];
+
+      if (numberFormatting == '2' && (typeof measure.prefixSuffix == 'undefined' || measure.prefixSuffix == 'prefix')) {
+        currency = (typeof measure.customCurrency == 'undefined') ? ['$', ''] : [measure.customCurrency, ''];
+      } else if (numberFormatting == '2' && measure.prefixSuffix == 'suffix') {
+        currency = (typeof measure.customCurrency == 'undefined') ? ['', '$'] : ['' ,measure.customCurrency];
+      } else {
+        // do nothing
+      }
+
+      const locale = d3.formatLocale({
+        decimal: $scope.localeInfo.decimalSep,
+        thousands: $scope.localeInfo.thousandSep,
+        grouping: [3],
+        currency,
+      });
+
+      return locale;
     },
   };
 });

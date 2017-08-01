@@ -109,13 +109,13 @@ define([
 
           let html = `
             <h2>ANOVA - Single factor</h2>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   </th><th><th>Df</th><th>Sum Sq</th><th>Mean Sq</th><th>F value</th><th>Pr(>F)</th><th></th>
                 </tr>
               </thead>
-              </tbody>
+              <tbody>
          `;
 
           const items = [dimension, 'Residuals'];

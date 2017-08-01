@@ -120,17 +120,17 @@ define([
           $(`.advanced-analytics-toolsets-${$scope.extId}`)
           .html(`
             <h2>Augmented Dickey-Fuller Test</h2>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   <th>Item</th><th>Value</th>
                 </tr>
               </thead>
-              </tbody>
+              <tbody>
                 <tr><td>data</td><td>${$scope.dataTitle}</td></tr>
-                <tr><td>Dickey-Fuller</td><td>${utils.format(result[0], '0,0.00000')}</td></tr>
+                <tr><td>Dickey-Fuller</td><td>${result[0]}</td></tr>
                 <tr><td>Lag order</td><td>${result[1]}</td></tr>
-                <tr><td>p-value</td><td>${utils.format(result[2], '0,0.00000')}</td></tr>
+                <tr><td>p-value</td><td>${result[2]}</td></tr>
               </tbody>
             </table>
             <div>* alternative hypothesis: stationary</div>

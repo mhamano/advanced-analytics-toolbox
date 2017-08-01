@@ -126,17 +126,17 @@ define([
           $(`.advanced-analytics-toolsets-${$scope.extId}`)
           .html(`
             <h2>Box-Ljung Test</h2>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   <th>Item</th><th>Value</th>
                 </tr>
               </thead>
-              </tbody>
+              <tbody>
                 <tr><td>data</td><td>${$scope.dataTitle}</td></tr>
-                <tr><td>X-squared</td><td>${utils.format(result[0], '0,0.00000')}</td></tr>
+                <tr><td>X-squared</td><td>${result[0]}</td></tr>
                 <tr><td>df</td><td>${result[1]}</td></tr>
-                <tr><td>p-value</td><td>${utils.format(result[2], '0,0.00000')}</td></tr>
+                <tr><td>p-value</td><td>${result[2]}</td></tr>
               </tbody>
             </table>
           `);

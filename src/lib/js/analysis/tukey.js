@@ -113,13 +113,13 @@ define([
           let html = `
             <h2>Tukey multiple comparisons of means</h2>
             <div>${layout.props.confidenceLevel * 100}% family-wise confidence level</div>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   </th><th><th>diff</th><th>lwr</th><th>upr</th><th>p adj</th>
                 </tr>
               </thead>
-              </tbody>
+              <tbody>
          `;
 
           for (let i = 0; i < rownames.length; i++) {

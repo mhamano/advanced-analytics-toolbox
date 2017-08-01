@@ -375,6 +375,23 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             },
             defaultValue: -1,
           },
+          displayTable: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Table display mode',
+            ref: 'props.displayTable',
+            options: [{
+              value: false,
+              label: 'Off',
+            }, {
+              value: true,
+              label: 'On',
+            }],
+            defaultValue: false,
+            show: (data) => {
+              return [0, 9].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
           // *****
           // Analysis Options
           // *****

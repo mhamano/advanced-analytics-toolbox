@@ -284,7 +284,7 @@ define([
           };
 
           // Set HTML element for chart
-          $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" style="width:100%;height:100%;"></div>`);
+          $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" class="simple" style="width:100%;height:100%;"></div>`);
 
           const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, customOptions);
 

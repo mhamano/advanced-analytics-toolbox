@@ -12,7 +12,6 @@ define([
   // Set style sheet
   $('<style>').html(cssContent).appendTo('head');
 
-
   /**
    * createChart - call createCube function based on the selected analysis type
    *
@@ -150,6 +149,8 @@ define([
     paint($element, layout) {
       // Get a reference to app
       const app = qlik.currApp(this);
+
+      this.$scope.self = this;
 
       // Set a flag to display 'Incomplete visualization' in 'analysis' mode.
       // In 'edit' mode, a chart or buttons for settings are displayed.

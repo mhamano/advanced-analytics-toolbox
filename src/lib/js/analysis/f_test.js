@@ -113,13 +113,13 @@ define([
           $(`.advanced-analytics-toolsets-${$scope.extId}`)
           .html(`
                 <h2>F test to compare two variances</h2>
-                <table>
+                <table class="simple">
                   <thead>
                     <tr>
                       <th>Item</th><th>Value</th>
                     </tr>
                   </thead>
-                  </tbody>
+                  <tbody>
                     <tr><td>F</td><td>${f}</td></tr>
                     <tr><td>num df</td><td>${numDf}</td></tr>
                     <tr><td>denom df</td><td>${denomDf}</td></tr>

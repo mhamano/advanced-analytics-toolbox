@@ -130,13 +130,13 @@ define([
 
           let html = `
             <h2>${$scope.dataTitle}</h2>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   <th>Item</th><th>Value</th>
                 </tr>
               </thead>
-              </tbody>
+              <tbody>
                 <tr><td>t</td><td>${t}</td></tr>
                 <tr><td>df</td><td>${df}</td></tr>
                 <tr><td>p-value</td><td>${pValue}</td></tr>

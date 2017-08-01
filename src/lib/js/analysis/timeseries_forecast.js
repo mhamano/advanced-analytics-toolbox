@@ -1,8 +1,10 @@
 define([
   '../chart/line_chart',
+  '../chart/datatables',
   '../util/utils',
   'ng!$q',
-], (lineChart, utils, $q) => {
+  '../../vendor/d3-format.min',
+], (lineChart, datatables, utils, $q, d3) => {
   return {
     /**
      * createCube - create HyperCubes
@@ -113,126 +115,183 @@ define([
           const palette = utils.getDefaultPaletteColor();
 
           const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
-
           const mean = result[0];
           const upper = result[1];
           const lower = result[2];
           const arimaorder = result[3];
 
-          const datasets = {};
+          // Chart mode
+          if (typeof $scope.layout.props.displayTable == 'undefined' || $scope.layout.props.displayTable == false) {
 
-          // Store actual values to datasets
-          const dataLength = dataPages[0].qMatrix.length;
-          const dim1 = []; // Dimension
-          const mea1 = []; // Actual values
+            const datasets = {};
 
-          $.each(dataPages[0].qMatrix, (key, value) => {
-            dim1.push(value[0].qText);
-            mea1.push(value[1].qNum);
-          });
+            // Store actual values to datasets
+            const dataLength = dataPages[0].qMatrix.length;
+            const dim1 = []; // Dimension
+            const mea1 = []; // Actual values
 
-          datasets.dim1 = dim1;
-          datasets.mea1 = mea1;
+            $.each(dataPages[0].qMatrix, (key, value) => {
+              dim1.push(value[0].qText);
+              mea1.push(value[1].qNum);
+            });
 
-          // Store forecast values to datasets
-          const mea2 = new Array(dataLength); // Forecast (mean)
-          const mea3 = new Array(dataLength); // Forecast (upper)
-          const mea4 = new Array(dataLength); // Forecast (lower)
+            datasets.dim1 = dim1;
+            datasets.mea1 = mea1;
 
-          for (let i = 0; i < layout.props.forecastingPeriods; i++) {
-            datasets.dim1.push(`+${i + 1}`);
-            mea2.push(mean[i]);
-            mea3.push(upper[i]);
-            mea4.push(lower[i]);
-          }
-          datasets.mea2 = mea2;
-          datasets.mea3 = mea3;
-          datasets.mea4 = mea4;
+            // Store forecast values to datasets
+            const mea2 = new Array(dataLength); // Forecast (mean)
+            const mea3 = new Array(dataLength); // Forecast (upper)
+            const mea4 = new Array(dataLength); // Forecast (lower)
 
-          // Calculate ARIMA order
-          let arima = '';
-          if (0 < arimaorder.length && arimaorder.length <= 3) {
-            arima = `(${arimaorder[0]},${arimaorder[1]},${arimaorder[2]})`;
-          } else if (arimaorder.length <= 6) {
-            arima = `(${arimaorder[0]},${arimaorder[1]},${arimaorder[2]})(${arimaorder[3]},${arimaorder[4]},${arimaorder[5]})`;
-          } else if (6 < arimaorder.length) {
-            arima = `(${arimaorder[0]},${arimaorder[1]},${arimaorder[2]})(${arimaorder[3]},${arimaorder[4]},${arimaorder[5]})[${arimaorder[6]}]`;
+            for (let i = 0; i < layout.props.forecastingPeriods; i++) {
+              datasets.dim1.push(`+${i + 1}`); // Forecast period is displayed as +1, +2, +3...
+              mea2.push(mean[i]);
+              mea3.push(upper[i]);
+              mea4.push(lower[i]);
+            }
+            datasets.mea2 = mea2;
+            datasets.mea3 = mea3;
+            datasets.mea4 = mea4;
+
+            // Calculate ARIMA order
+            let arima = '';
+            if (0 < arimaorder.length && arimaorder.length <= 3) {
+              arima = `(${arimaorder[0]},${arimaorder[1]},${arimaorder[2]})`;
+            } else if (arimaorder.length <= 6) {
+              arima = `(${arimaorder[0]},${arimaorder[1]},${arimaorder[2]})(${arimaorder[3]},${arimaorder[4]},${arimaorder[5]})`;
+            } else if (6 < arimaorder.length) {
+              arima = `(${arimaorder[0]},${arimaorder[1]},${arimaorder[2]})(${arimaorder[3]},${arimaorder[4]},${arimaorder[5]})[${arimaorder[6]}]`;
+            } else {
+              // do nothing
+            }
+
+            const chartData = [
+              {
+                x: datasets.dim1,
+                y: datasets.mea1,
+                name: 'Observed',
+                mode: 'lines+markers',
+                fill:  layout.props.line,
+                fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${palette[layout.props.colorForMain]},0.3)`,
+                marker: {
+                  color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
+                  size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
+                },
+                line: {
+                  width: layout.props.borderWidth,
+                },
+              },
+              {
+                x: datasets.dim1,
+                y: datasets.mea2,
+                name: 'Fit',
+                mode: 'lines+markers',
+                marker: {
+                  color: (layout.props.colors) ? `rgba(${palette[7]},1)` : `rgba(${palette[layout.props.colorForSub]},1)`,
+                  size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
+                },
+                line: {
+                  width: layout.props.borderWidth,
+                  //color: `rgba(${palette[layout.props.colorForSub]},1)`,
+                },
+              },
+              {
+                x: datasets.dim1,
+                y: datasets.mea3,
+                name: 'Upper',
+                fill: 'tonexty',
+                fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+                type: 'scatter',
+                mode: 'none',
+              },
+              {
+                x: datasets.dim1,
+                y: datasets.mea4,
+                name: 'Lower',
+                fill: 'tonexty',
+                fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+                type: 'scatter',
+                mode: 'none',
+              },
+            ];
+
+            const customOptions = {
+              xaxis: {
+                type: 'category',
+                title: $scope.layout.props.xLabelsAndTitle ? $scope.layout.props.dimensions[0].label : '',
+                showgrid: $scope.layout.props.xScale,
+                side: $scope.layout.props.xAxisPosition,
+              },
+            };
+
+            if (layout.props.displayARIMAParams) {
+              // Display ARIMA parameters
+              $(`.advanced-analytics-toolsets-${$scope.extId}`)
+              .html(`
+                <div style="width:100%;height:5%;text-align:right;">ARIMA${arima}</div>
+                <div id="aat-chart-${$scope.extId}" style="width:100%;height:95%;"></div>
+              `);
+            } else {
+              // Hide ARIM parameters
+              $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" style="width:100%;height:100%;"></div>`);
+            }
+            const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, customOptions);
+            lineChart.setEvents(chart, $scope, app);
+
+          // Table display mode
           } else {
-            // do nothing
+            // Get locale info
+            const locale = utils.getLocale($scope, 0);
+
+            // Get number format
+            const numberFormat = utils.getNumberFormat($scope, 0);
+
+            // Store actual values to datasets
+            const dataLength = dataPages[0].qMatrix.length;
+            const dataset = [];
+
+            $.each(dataPages[0].qMatrix, (key, value) => {
+              dataset.push([
+                value[0].qElemNumber,
+                value[0].qText,
+                locale.format(numberFormat)(value[1].qNum).replace(/G/, 'B'),
+                '',
+                '',
+                '',
+              ]);
+            });
+
+            for (let i = 0; i < layout.props.forecastingPeriods; i++) {
+              dataset.push([
+                '',
+                `+${i + 1}`, // Forecast period is displayed as +1, +2, +3...
+                '',
+                locale.format(numberFormat)(mean[i]).replace(/G/, 'B'),
+                locale.format(numberFormat)(upper[i]).replace(/G/, 'B'),
+                locale.format(numberFormat)(lower[i]).replace(/G/, 'B'),
+              ]);
+            }
+
+            const html = `
+              <table id="aat-table-${$scope.extId}" class="display">
+                <thead>
+                  <tr>
+                    <th>qElemNumber</th>
+                    <th>${$scope.layout.props.dimensions[0].label}</th>
+                    <th>${$scope.layout.props.measures[0].label}</th>
+                    <th>Fit</th>
+                    <th>Lower</th>
+                    <th>Upper</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>`;
+
+            datatables.draw(app, $scope, `#aat-table-${$scope.extId}`, dataset, html, null).then((table) => {
+              datatables.setEvents(table, $scope, app);
+            });
           }
-
-          const chartData = [
-            {
-              x: datasets.dim1,
-              y: datasets.mea1,
-              name: 'Observed',
-              mode: 'lines+markers',
-              fill:  layout.props.line,
-              fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${palette[layout.props.colorForMain]},0.3)`,
-              marker: {
-                color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
-                size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
-              },
-              line: {
-                width: layout.props.borderWidth,
-              },
-            },
-            {
-              x: datasets.dim1,
-              y: datasets.mea2,
-              name: 'Fit',
-              mode: 'lines+markers',
-              marker: {
-                color: (layout.props.colors) ? `rgba(${palette[7]},1)` : `rgba(${palette[layout.props.colorForSub]},1)`,
-                size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
-              },
-              line: {
-                width: layout.props.borderWidth,
-                //color: `rgba(${palette[layout.props.colorForSub]},1)`,
-              },
-            },
-            {
-              x: datasets.dim1,
-              y: datasets.mea3,
-              name: 'Upper',
-              fill: 'tonexty',
-              fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
-              type: 'scatter',
-              mode: 'none',
-            },
-            {
-              x: datasets.dim1,
-              y: datasets.mea4,
-              name: 'Lower',
-              fill: 'tonexty',
-              fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
-              type: 'scatter',
-              mode: 'none',
-            },
-          ];
-
-          const customOptions = {
-            xaxis: {
-              type: 'category',
-              title: $scope.layout.props.xLabelsAndTitle ? $scope.layout.props.dimensions[0].label : '',
-              showgrid: $scope.layout.props.xScale,
-              side: $scope.layout.props.xAxisPosition,
-            },
-          };
-
-          if (layout.props.displayARIMAParams) {
-            // Display ARIMA parameters
-            $(`.advanced-analytics-toolsets-${$scope.extId}`)
-            .html(`
-              <div style="width:100%;height:5%;text-align:right;">ARIMA${arima}</div>
-              <div id="aat-chart-${$scope.extId}" style="width:100%;height:95%;"></div>
-            `);
-          } else {
-            // Hide ARIM parameters
-            $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" style="width:100%;height:100%;"></div>`);
-          }
-          const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, customOptions);
-          lineChart.setEvents(chart, $scope, app);
         }
         return defer.resolve();
       });

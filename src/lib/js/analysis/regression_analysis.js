@@ -139,7 +139,7 @@ define([
           // Set table header
           let html = `
             <h2>Residuals:</h2>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   <th>Min</th><th>1Q</th><th>Median</th><th>3Q</th><th>Max</th>
@@ -153,13 +153,13 @@ define([
             </table>
 
             <h2>Coefficients:</h2>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   <th></th><th>Estimate</th><th>Std.Error</th><th>t value</th><th>Pr(>|t|)</th><th>Signif</th>
                 </tr>
               </thead>
-              </tbody>
+              <tbody>
           `;
 
           // Set regression analysis results to table
@@ -176,7 +176,7 @@ define([
             <div>Signif. codes: 0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div>
 
             <h2>Others:</h2>
-            <table>
+            <table class="simple">
               <thead>
                 <tr>
                   <th>Item</th><th>Value</th>

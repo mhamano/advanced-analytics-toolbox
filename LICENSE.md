@@ -48,7 +48,13 @@ These external libraries are used within this solution. Many thanks to the autho
 * Author: Luca Ongaro
 
 **Library 3**
-* Name: Numeral.js
-* License: MIT License (https://github.com/adamwdraper/Numeral-js/blob/master/LICENSE)
-* Url: https://github.com/adamwdraper/Numeral-js
-* Author: Adam Draper
+* Name: DataTables
+* License: MIT License (https://github.com/DataTables/DataTables/blob/master/license.txt)
+* Url: https://github.com/DataTables/DataTables
+* Author: SpryMedia Ltd
+
+**Library 4**
+* Name: d3-format
+* License: BSD 3-clause "New" or "Revised" License (https://github.com/d3/d3-format/blob/master/LICENSE)
+* Url: https://github.com/d3/d3-format
+* Author: Mike Bostock
