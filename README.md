@@ -30,7 +30,8 @@ Refer to the usage and examples included on each analysis type page linked from 
  * Dimensions and measures in master items cannot be used on this extension.
  * Fields cannot be added by dragging and dropping them onto this extension.
  * This extension cannot be exported as a PDF. Chart image can be downloaded by clicking [Download plot as a png] button placed on the top of a chart area.
- * The exported data format into excel file might not represent the data format shown on the chart or table of the extension. (For instance, the calculation result of some analysis types is returned from R to Qlik Sense hypercube in json format, and the data in json is displayed on chart or table after transformations. In this case, the exported data format is in the json format, not in the tabular format.) It is considered to provide an option to display data in a table format and to export data from it as a future plan.
+ * The exported data format into excel file might not represent the data format shown on the chart or table of the extension. (For instance, the calculation result of some analysis types is returned from R to Qlik Sense hypercube in json format, and the data in json is displayed on chart or table after transformations. In this case, the exported data format is in the json format, not in the tabular format.)
+ * The table display mode is available for [Line chart with linear regression line] and [ARIMA forecast]. Its csv export and printing functions cannot be used on Qlik Sense Desktop. This is available on Qlik Sense Enterprise or  access to the URL of http://localhost:4848/hub on a web browser while Qlik Sense Desktop is running.
  * The syntax of custom number format is based on the [d3-format](https://github.com/d3/d3-format/blob/master/README.md#d3-format), not on the standard Qlik Sense number format.
  * The number formatting other than thousand separator = "," and decimal separator = "." is not currently working.
 
