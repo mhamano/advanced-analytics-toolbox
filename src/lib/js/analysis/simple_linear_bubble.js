@@ -110,7 +110,8 @@ define([
         } else {
           const palette = utils.getDefaultPaletteColor();
 
-          const dim1 = []; // Dimension
+          const elemNum = [];
+          const dim1 = [];
           const mea1 = [];
           const mea2 = [];
           const mea3 = [];
@@ -119,6 +120,7 @@ define([
 
           const datasets = dataPages[0].qMatrix.map((value) => {
             return {
+              elemNum: value[0].qElemNumber,
               dim1: value[0].qText,
               mea1: value[1].qNum,
               mea2: value[2].qNum,
@@ -136,6 +138,7 @@ define([
           });
 
           $.each(datasets, (key, value) => {
+            elemNum.push(value.elemNum);
             dim1.push(value.dim1);
             mea1.push(value.mea1);
             mea2.push(value.mea2);
@@ -148,6 +151,7 @@ define([
             {
               x: mea1,
               y: mea2,
+              elemNum,
               text: dim1,
               name: dimension,
               mode: 'markers',

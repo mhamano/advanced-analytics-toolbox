@@ -118,9 +118,11 @@ define([
           const palette = utils.getDefaultPaletteColor();
 
           // Get dimension
+          const elemNum = [];
           const dim1 = [];
 
           $.each(dataPages[0].qMatrix, (key, value) => {
+            elemNum.push(value[0].qElemNumber);
             dim1.push(value[0].qText);
           });
 
@@ -152,6 +154,7 @@ define([
               xaxis: 'x2',
               yaxis: 'y2',
               text: dim1,
+              elemNum,
               name: dimension,
               mode: 'markers',
               type: 'scatter',

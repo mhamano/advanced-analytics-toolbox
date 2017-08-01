@@ -125,12 +125,14 @@ define([
           const bubbleData = [];
           for (let i = 1; i <= layout.props.numberOfClusters; i++) {
             bubbleData[i] = [];
+            bubbleData[i].elemNum = [];
             bubbleData[i].text = [];
             bubbleData[i].x = [];
             bubbleData[i].y = [];
           }
 
           $.each(dataPages[0].qMatrix, (key, value) => {
+            bubbleData[value[3].qNum].elemNum.push(value[0].qElemNumber);
             bubbleData[value[3].qNum].text.push(value[0].qText);
             bubbleData[value[3].qNum].x.push(value[1].qNum);
             bubbleData[value[3].qNum].y.push(value[2].qNum);
@@ -141,6 +143,7 @@ define([
             chartData.push({
               x: bubbleData[i].x,
               y: bubbleData[i].y,
+              elemNum: bubbleData[i].elemNum,
               text: bubbleData[i].text,
               name: `cluster ${i}`,
               mode: 'markers',
@@ -159,7 +162,6 @@ define([
           bubbleChart.setEvents(chart, $scope, app);
           $(`#aat-chart-${$scope.extId} .legend .traces .legendtoggle`).css('display', 'none');
           $(`#aat-chart-${$scope.extId} g.traces`).on('click', (data) => {
-            console.log(bubbleData[data.currentTarget.childNodes[1].textContent.replace('cluster ','')].text)
             const selected = bubbleData[data.currentTarget.childNodes[1].textContent.replace('cluster ','')].text;
             const fields = selected.map((d) => {
               return parseInt(d, 10);

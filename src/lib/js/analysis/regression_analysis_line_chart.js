@@ -129,6 +129,7 @@ define([
         } else {
           const palette = utils.getDefaultPaletteColor();
 
+          const elemNum = [];
           const dim1 = []; // Dimension
           const mea1 = [];
           const mea2 = [];
@@ -136,6 +137,7 @@ define([
           const mea4 = [];
 
           $.each(dataPages[0].qMatrix, (key, value) => {
+            elemNum.push(value[0].qElemNumber);
             dim1.push(value[0].qText);
             mea1.push(value[1].qNum);
             mea2.push(value[2].qNum);
@@ -147,6 +149,7 @@ define([
             {
               x: dim1,
               y: mea1,
+              elemNum,
               name: 'Observed',
               mode: 'lines+markers',
               fill:  layout.props.line,

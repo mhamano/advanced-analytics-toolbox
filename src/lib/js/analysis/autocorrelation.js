@@ -107,7 +107,7 @@ define([
      *
      * @return {Object} Promise object
      */
-    drawChart($scope) {
+    drawChart($scope, app) {
       const defer = $q.defer();
       const layout = $scope.layout;
 
@@ -136,10 +136,12 @@ define([
           const low = dataPages[0].qMatrix[1][4].qNum;
 
           // Line Chart
+          const elemNum = [];
           const dim1 = [];
           const mea1 = [];
 
           $.each(dataPages[0].qMatrix, (key, value) => {
+            elemNum.push(value[0].qElemNumber);
             dim1.push(value[0].qText);
             mea1.push(value[1].qNum);
           });
@@ -160,6 +162,7 @@ define([
           const chartData = [{
             x: dim1,
             y: mea1,
+            elemNum,
             name: 'Observed',
             mode: 'lines+markers',
             fill: layout.props.line,
@@ -287,20 +290,7 @@ define([
           $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" class="simple" style="width:100%;height:100%;"></div>`);
 
           const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, customOptions);
-
-          chart.on('plotly_click', (eventData) => {
-            // do nothing
-          });
-
-          chart.on('plotly_selected', (eventData) => {
-            if (typeof eventData != 'undefined' && eventData.points.length > 0) {
-              const fields = eventData.points.map((d) => {
-                return parseInt(d.pointNumber, 10);
-              });
-              // app.field(dimension).selectValues(fields, true, true);
-              $scope.backendApi.selectValues(0, fields, true);
-            }
-          });
+          lineChart.setEvents(chart, $scope, app);
 
         } // end of if condition
         return defer.resolve();

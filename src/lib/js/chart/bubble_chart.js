@@ -70,12 +70,14 @@ define([
         if (typeof eventData != 'undefined' && eventData.points.length > 0) {
           const fields = eventData.points.map((d) => {
             if (typeof d.text != 'undefined') {
-              return parseInt(d.text, 10);
+              const pointNumber = d.pointNumber;
+              return parseInt(d.data.elemNum[pointNumber], 10);
             }
           }).filter((x) => {
             return typeof x !== 'undefined';
           });
-          app.field($scope.layout.props.dimensions[0].expression).selectValues(fields, true, true);
+          //app.field($scope.layout.props.dimensions[0].expression).selectValues(fields, true, true);
+          $scope.self.selectValues(0, fields, true);
         }
       });
 

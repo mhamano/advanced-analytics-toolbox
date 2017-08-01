@@ -127,14 +127,16 @@ define([
 
             // Store actual values to datasets
             const dataLength = dataPages[0].qMatrix.length;
+            const elemNum = [];
             const dim1 = []; // Dimension
             const mea1 = []; // Actual values
 
             $.each(dataPages[0].qMatrix, (key, value) => {
+              elemNum.push(value[0].qElemNumber);
               dim1.push(value[0].qText);
               mea1.push(value[1].qNum);
             });
-
+            datasets.elemNum = elemNum;
             datasets.dim1 = dim1;
             datasets.mea1 = mea1;
 
@@ -169,6 +171,7 @@ define([
               {
                 x: datasets.dim1,
                 y: datasets.mea1,
+                elemNum: datasets.elemNum,
                 name: 'Observed',
                 mode: 'lines+markers',
                 fill:  layout.props.line,

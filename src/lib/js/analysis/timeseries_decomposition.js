@@ -98,22 +98,26 @@ define([
         ) {
           utils.displayConnectionError($scope.extId);
         } else {
-          let dim1;
-          let mea1;
+          let elemNum;
+          let dim;
+          let mea;
           const palette = utils.getDefaultPaletteColor();
 
           const chartData = [];
           for (let i = 1; i < 5; i++) {
-            dim1 = [];
-            mea1 = [];
+            elemNum = [];
+            dim = [];
+            mea = [];
 
             $.each(dataPages[0].qMatrix, (key, value) => {
-              dim1.push(value[0].qText);
-              mea1.push(value[i].qNum);
+              elemNum.push(value[0].qElemNumber);
+              dim.push(value[0].qText);
+              mea.push(value[i].qNum);
             });
             const dataset = {
-              x: dim1,
-              y: mea1,
+              x: dim,
+              y: mea,
+              elemNum,
               name: (i === 1) ? 'Observed' : (i === 2) ? 'Trend' : (i === 3) ? 'Seasonal' : (i === 4) ? 'Random' : '',
               mode: 'lines+markers',
               fill: layout.props.line,
