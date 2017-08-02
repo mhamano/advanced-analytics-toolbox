@@ -35,6 +35,7 @@
 * Clustering
   * [k-means clustering](kmeans.md) - Performs k-means clustering and plots scatter chart colored by clusters.
   * [k-means clustering (3D)](kmeans_3d.md) - Performs k-means clustering and plots 3D scatter chart colored by clusters. (* This is not available on Qlik Sense Desktop application.)
+  * [k-means - Cluster means/centers](kmeans_means.md) - Performs k-means clustering and display a bar chart of cluster means/centers.
   * [Find optimal number of clusters](kmeans_optimize.md) - Calculate the optimal number of clusters. Currently, gap statistic method is available.
 
 * Text mining

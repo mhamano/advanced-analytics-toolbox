@@ -453,7 +453,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             label: 'Number of clusters',
             type: 'integer',
             show: (data) => {
-              return [10].indexOf(data.props.analysisTypeId) >= 0;
+              return [10, 16, 24].indexOf(data.props.analysisTypeId) >= 0;
             },
             defaultValue: 3,
           },
@@ -503,7 +503,25 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             }],
             defaultValue: false,
             show: (data) => {
-              return [23].indexOf(data.props.analysisTypeId) >= 0;
+              return [23, 24].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
+          dividedBy: {
+            type: 'string',
+            component: 'dropdown',
+            label: 'Grouped by',
+            ref: 'props.dividedBy',
+            options: [{
+              value: 'variables',
+              label: 'Variables',
+            },
+            {
+              value: 'clusters',
+              label: 'clusters',
+            }],
+            defaultValue: 'variables',
+            show: (data) => {
+              return [24].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           // Time series analysis
@@ -956,7 +974,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 16, 17, 19, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 16, 17, 19, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
             },
@@ -979,7 +997,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 1, 9, 10, 16, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 16, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xAxisPosition: {
@@ -996,7 +1014,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: 'bottom',
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xScale: {
@@ -1013,7 +1031,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xAxisType: {
@@ -1062,7 +1080,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 1, 9, 10, 16, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 16, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               yAxisPosition: {
@@ -1079,7 +1097,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: 'left',
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               yScale: {
@@ -1096,7 +1114,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 15, 17, 19].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 24].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
             },

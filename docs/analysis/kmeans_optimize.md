@@ -26,7 +26,7 @@ Calculate the optimal number of clusters. Currently, gap statistic method is ava
  * Optimization method - Method to find an optimal number of clusters. Currently only gap statistic is available.
  * Max number of clusters - The maximum number of clusters to consider
  * Number of Monte Carlo samples -  The number of Monte Carlo (“bootstrap”) samples
- * Scale data - When turned on, input data is scaled before calculating the optimal number of clusters
+ * Scale data - When turned on, input data is scaled/normalized before calculating the optimal number of clusters
 
 ## Example1 - Iris
   1. Download the following sample file.
