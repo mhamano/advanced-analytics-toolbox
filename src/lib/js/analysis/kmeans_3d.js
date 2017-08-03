@@ -43,6 +43,11 @@ define([
         }
       }
 
+      let data = `cbind(${meaList})`;
+      if (layout.props.scaleData) {
+        data = `scale(cbind(${meaList}))`;
+      }
+
       const measure1 = utils.validateMeasure(layout.props.measures[0]);
       const measure2 = utils.validateMeasure(layout.props.measures[1]);
       const measure3 = utils.validateMeasure(layout.props.measures[2]);
@@ -67,7 +72,7 @@ define([
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('set.seed(1);kmeans(cbind(${meaList}, num.seeds=10),${numberOfClusters})$cluster', ${params})`,
+            qDef: `R.ScriptEval('set.seed(1);kmeans(${data},${numberOfClusters})$cluster', ${params})`,
           },
         },
         {

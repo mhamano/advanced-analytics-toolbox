@@ -22,6 +22,7 @@ Performs k-means clustering and plots scatter chart colored by clusters.
 
 ## Options
  * Number of clusters - Number of clusters to be created
+ * Scale data - When turned on, input data is scaled/normalized before calculating the optimal number of clusters
 
 ## Example1 - Iris
  1. Download the following sample file.

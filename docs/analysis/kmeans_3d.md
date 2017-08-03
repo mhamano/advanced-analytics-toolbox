@@ -25,6 +25,7 @@ Performs k-means clustering and plots 3D scatter chart colored by clusters.
 
 ## Options
  * Number of clusters - Number of clusters to be created
+ * Scale data - When turned on, input data is scaled/normalized before calculating the optimal number of clusters
 
 ### Example1 - Wholesale customers
   1. Follow the instruction of example 1 explained on [k-means clustering](./kmeans.md). Select [Clustering] > [k-means clustering (3D)] for [Analysis Type]

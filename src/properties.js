@@ -503,7 +503,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             }],
             defaultValue: false,
             show: (data) => {
-              return [23, 24].indexOf(data.props.analysisTypeId) >= 0;
+              return [10, 16, 23, 24].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           dividedBy: {
