@@ -517,9 +517,9 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             },
             {
               value: 'clusters',
-              label: 'clusters',
+              label: 'Clusters',
             }],
-            defaultValue: 'variables',
+            defaultValue: 'clusters',
             show: (data) => {
               return [24].indexOf(data.props.analysisTypeId) >= 0;
             },
