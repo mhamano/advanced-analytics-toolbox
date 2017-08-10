@@ -1,0 +1,15 @@
+<div class="lui-popover">
+  <div class="lui-popover__header">
+    <input type="text" class="lui-input" ng-model="dimSearchString">
+  </div>
+  <div class="lui-popover__body lui-nopad object-add-popover-content" style="padding:0px;height:250px;overflow:scroll">
+    <ul class="lui-list">
+      <div class="object-add-popover-list-header">Fields</div>
+      <li class="lui-list__item lui-list__action" ng-repeat="d in fieldList | filter: { label: dimSearchString }" ng-click="selectDimension(<dimensionId>, d.value)" ng-class="{'derived-field': d.derivedField}">
+        <span ng-if="d.autocalendar" class="lui-icon lui-list__aside lui-icon--calendar"></span>
+        <span class="lui-list__text lui-list__action" ng-if="!(dimSearchString.length > 0 && d.derivedField)">{{d.label}}</span>
+        <span class="lui-list__text lui-list__action" ng-if="dimSearchString.length > 0 && d.derivedField">{{d.value}}</span>
+      </li>
+    </ul>
+  </div>
+</div>

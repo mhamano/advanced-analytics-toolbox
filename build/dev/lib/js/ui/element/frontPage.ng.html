@@ -1,0 +1,57 @@
+<div class="requirements-wrapper" ng-if="screen==0 || screen==1" ng-class="{ incomplete: incomplete }">
+  <div class="requirements">
+    <button ng-if="screen==1 && !incomplete" class="lui-button  lui-button--rounded" ng-click="removeAnalysisTypeSelection()">
+      <span class="lui-button__icon  lui-icon  lui-icon lui-icon--triangle-left"></span>
+      <span class="lui-button__text">Back</span>
+    </button>
+    <h2 class="header">
+      <i class="object-icon lui-icon lui-icon--library" ng-if="screen==0 && !incomplete"></i><!-- Edit mode / Screen-0 -->
+      <i class="object-icon lui-icon lui-icon--bar-chart" ng-if="screen==1 && !incomplete"></i><!-- Edit mode / Screen-1 -->
+      <i class="object-icon lui-icon lui-icon--bar-chart" ng-if="incomplete"></i><!-- Analysis mode / Incpmplete visualization -->
+    </h2>
+
+    <!-- Edit mode / Screen-0 -->
+    <ul ng-if="screen==0 && !incomplete">
+      <li class="item">
+        <button class="add-button lui-button popover-trigger" ng-if="!incomplete && layout.props.analysisTypeId==-1" ng-click="listAnalysisCategories($event)" ng-class="{ 'lui-active': listAnalysisCategoriesButton.active }">Select analysis type</button>
+      </li>
+    </ul>
+    <!--// Edit mode / Screen-0 -->
+
+    <!-- Edit mode / Screen-1 -->
+    <ul ng-if="screen==1 && !incomplete">
+      <li class="item" ng-repeat="d in createArray(minDims)">
+        <button class="add-button lui-button popover-trigger" ng-show="layout.props.dimensions[{{$index}}] == undefined" ng-click="openDimensionList($event, $index)" ng-class="{ 'lui-active': isDimensionListOpened[$index] }">Add dimension</button>
+        <span ng-show="layout.props.dimensions[{{$index}}] != undefined" class="text" title="layout.props.dimensions[{{$index}}].label">{{layout.props.dimensions[$index].label}}</span>
+        <i ng-show="layout.props.dimensions[{{$index}}] != undefined" class="lui-icon lui-icon--remove" ng-click="removeDimension($index)" title="Delete"></i>
+      </li>
+      <li class="item" ng-repeat="d in createArray(customMinMeas[layout.props.analysisTypeId])">
+        <button class="add-button lui-button popover-trigger" ng-show="layout.props.measures[{{$index}}] == undefined" ng-click="openMeasureList($event, $index, 'measure')" ng-class="{ 'lui-active': isMeasureListOpened[$index] }">
+          {{(selectedAnalysisType[0].setCustomButtonLabel) ? selectedAnalysisType[0].meaButtonLabel[$index] : 'Add measure'}}
+          {{(selectedAnalysisType[0].meaButtonLabel[$index].length > 0)? '': selectedAnalysisType[0].meaButtonLabelOthers }}
+        </button>
+        <span ng-show="layout.props.measures[{{$index}}] != undefined" class="text" title="layout.props.measures[{{$index}}].label">{{layout.props.measures[$index].label}}</span>
+        <i ng-show="layout.props.measures[{{$index}}] != undefined" class="lui-icon lui-icon--remove" ng-click="removeMeasure($index)" title="Delete"></i>
+      </li>
+    </ul>
+
+    <div class="footer" ng-if="screen==1 && !incomplete && allowAddMea" style="text-align:center;">
+      <button class="lui-button  lui-button--rounded" ng-click="addButton(layout.props.analysisTypeId)">
+        <span class="lui-button__icon  lui-icon  lui-icon--plus"></span>
+      </button>
+      <button class="lui-button  lui-button--rounded" ng-click="removeButton(layout.props.analysisTypeId)">
+        <span class="lui-button__icon  lui-icon  lui-icon--minus"></span>
+      </button>
+    </div>
+    <!--// Edit mode / Screen-1 -->
+
+    <!-- Annalysis mode / Incpmplete visualization -->
+    <p class="incomplete-text ng-scope" ng-show="incomplete">Incomplete visualization</p>
+    <!--// Edit mode / Incpmplete visualization -->
+
+  </div>
+
+  <a href="https://github.com/mhamano/advanced-analytics-toolbox/blob/master/docs/analysis/analysis.md" target="_blank" ng-if="screen==0 && !incomplete" class="lui-icon  lui-icon--large  lui-icon--help" style="font-size:20px;position:absolute;right:20px;text-decoration:none;"></a>
+  <a href="https://github.com/mhamano/advanced-analytics-toolbox/blob/master/docs/analysis/{{file}}.md" target="_blank" ng-if="screen==1 && !incomplete" class="lui-icon  lui-icon--large  lui-icon--help" style="font-size:20px;position:absolute;right:20px;text-decoration:none;"></a>
+
+</div>

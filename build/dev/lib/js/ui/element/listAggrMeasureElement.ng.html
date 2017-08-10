@@ -1,0 +1,14 @@
+<div class="lui-popover__header" ng-mouseover="hoverActive=true" ng-mouseleave="hoverActive=false" ng-mousedown="hoverActive=false" ng-style="hoverActive ? {'background-color': '#595959', 'color': '#FFFFFF'} : {}">
+  <div ng-click="goBackMeasure($event, <measureId>);">
+    <i class="object-add-popover-back-icon  lui-icon  lui-icon--triangle-left"></i>
+    <span>Back</span>
+  </div>
+</div>
+<div class="lui-popover__body lui-nopad" style="padding:0px;height:250px;overflow:scroll">
+  <div class="object-add-popover-list-header">aggregation</div>
+  <ul class="lui-list">
+      <li class="lui-list__item list-d.id" ng-repeat="d in aggregationList" ng-click="selectMeasure(<measureId>, d, '<expressionValue>')">
+        <span class="lui-list__text lui-list__action">{{d}}([<expressionName>])</span>
+      </li>
+  </ul>
+</div>

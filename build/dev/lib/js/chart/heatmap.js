@@ -1,0 +1,2 @@
+"use strict";define(["../../vendor/plotly.min","../util/utils"],function(t,o){return{draw:function(o,e,n,i){var s={annotations:[],xaxis:{ticks:"",side:"top"},yaxis:{ticks:"",ticksuffix:" ",autosize:!1,autorange:"reversed"}};$.extend(s,i);var a={scrollZoom:!0,showLink:!1,displaylogo:!1,modeBarButtonsToRemove:["sendDataToCloud"]},r=document.getElementById(n);return t.plot(r,e,s,a),r}}});
+//# sourceMappingURL=../../maps/chart/heatmap.js.map

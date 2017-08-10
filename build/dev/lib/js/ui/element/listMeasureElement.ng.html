@@ -1,0 +1,16 @@
+<div class="lui-popover">
+  <div class="lui-popover__header">
+    <input type="text" class="lui-input" ng-model="meaSearchString">
+  </div>
+  <div class="lui-popover__body lui-nopad object-add-popover-content" style="padding:0px;height:250px;overflow:scroll">
+    <div class="object-add-popover-list-header">From a field</div>
+    <ul class="lui-list">
+      <li class="lui-list__item lui-list__action" ng-repeat="d in fieldList | filter: { label: meaSearchString }" ng-click="drilldownMeasure(<id>, d.label, d.value)" ng-class="{'derived-field': d.derivedField}">
+        <span ng-if="d.autocalendar" class="lui-icon lui-list__aside lui-icon--calendar"></span>
+        <span class="lui-list__text lui-list__action" ng-if="!(meaSearchString.length > 0 && d.derivedField)">{{d.label}}</span>
+        <span class="lui-list__text lui-list__action" ng-if="meaSearchString.length > 0 && d.derivedField">{{d.value}}</span>
+        <i class="object-add-popover-toogle-step2-icon  lui-list__aside lui-icon  lui-icon--triangle-right"></i>
+      </li>
+    </ul>
+  </div>
+</div>
