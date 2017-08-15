@@ -46,7 +46,7 @@ Performs k-means clustering and plots scatter chart colored by clusters.
 
 ## Example2 - Wholesale customers
   1. Download the following sample file.
-    * Wholesale customers ( [Download file](./data/lh.xlsx) | [Description on the dataset](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/lh.html) )  
+    * Wholesale customers ( [Download file](./data/WholesaleCustomers.xlsx) | [Description on the dataset](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/lh.html) )  
   2. Load the downloaded file into a new Qlik Sense app.
   3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Clustering] > [k-means clustering] for [Analysis Type]
   4. Select [ID] for a dimension.
