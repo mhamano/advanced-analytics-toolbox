@@ -40,6 +40,10 @@ The followings are not limitations, but need to be taken into consideration to g
  * When performing time series analysis, be sure to sort the input data by the time series field (Date, Year, YearMonth, Timestamp, Sequential ID, etc) in ascending order.
  * Many analysis type typically expect a dimension values to be records which uniquely identifies each record (ex: ID, Code). Be sure that summed records by a dimension are passed to R When you select a grouping field for a dimension.
 
+## Developer Notes
+
+See [Developer Notes](./docs/dev.md)
+
 ## Author
 
 **Masaki Hamano**
@@ -47,7 +51,7 @@ The followings are not limitations, but need to be taken into consideration to g
 
 ## Change Log
 
-See [releases](https://github.com/mhamano/advanced-analytics-toolbox/releases).
+See [Releases](https://github.com/mhamano/advanced-analytics-toolbox/releases).
 
 ## License & Copyright
 The software is made available "AS IS" without any warranty of any kind under the MIT License (MIT).
