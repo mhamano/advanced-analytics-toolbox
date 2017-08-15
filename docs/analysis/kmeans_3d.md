@@ -1,4 +1,3 @@
-# k-means clustering (3D)
 Performs k-means clustering and plots 3D scatter chart colored by clusters.
 
 ## Screenshot
@@ -28,6 +27,8 @@ Performs k-means clustering and plots 3D scatter chart colored by clusters.
  * Scale data - When turned on, input data is scaled/normalized before calculating the optimal number of clusters
 
 ### Example1 - Wholesale customers
-  1. Follow the instruction of example 1 explained on [k-means clustering](./kmeans.md). Select [Clustering] > [k-means clustering (3D)] for [Analysis Type]
+  1. Follow the instruction of example 2 explained on [k-means clustering](./kmeans.md). Select [Clustering] > [k-means clustering (3D)] for [Analysis Type]
   2. The following 3D chart is displayed.
-  ![kmeans screenshot](./images/kmeans_3d_example1.png)
+  ![kmeans screenshot](./images/kmeans_3d_example2.png)
+  3. By dragging the chart, you are able to rotate it to evaluate the result from different perspectives.
+  ![kmeans screenshot](./images/kmeans_3d_example3.png)
