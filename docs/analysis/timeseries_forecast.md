@@ -39,7 +39,7 @@ Displays time series forecasts with ARIMA modeling on a line chart.
 
 ## Example1 - Monthly Airline Passenger Numbers 1949-1960
   1. Download the following sample file.
-    * AirPassengers ( [Download file](./data/AirPassengers.csv) | [Description on the dataset](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/AirPassengers.html) )  
+    * AirPassengers ( [Download file](./data/AirPassengers.xlsx) | [Description on the dataset](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/AirPassengers.html) )  
   2. Load the downloaded file into a new Qlik Sense app using data manager by selecting [Add data] option. (Derived master calendar fields are automatically created on Date field.)
   3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Time Series Analysis] > [ARIMA forecast] for [Analysis Type]
   4. Select [YearMonth] for a dimension and Sum([Passengers]) for a measure
