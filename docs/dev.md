@@ -7,6 +7,8 @@ This page includes notes on how to setup project and modify codes of 'advanced-a
 
  `npm install`
 
+ `npm install -g gulp`
+
 ## Working on the development
   1. Start command prompt, move to the project directory and execute the following command.
 
