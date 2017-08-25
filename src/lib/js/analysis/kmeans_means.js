@@ -156,7 +156,7 @@ define([
               chartData.push({
                 x: meaList,
                 y: value,
-                name: `cluster ${key}`,
+                name: `cluster ${key + 1}`,
                 type: 'bar',
               });
             });
