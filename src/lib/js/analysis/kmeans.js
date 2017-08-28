@@ -154,7 +154,7 @@ define([
               mode: 'markers',
               type: 'scatter',
               marker: {
-                color: `rgba(${palette[i - 1]},0.7)`,
+                // color: `rgba(${palette[i - 1]},0.7)`,
                 size: layout.props.bubbleSize,
               },
             });
