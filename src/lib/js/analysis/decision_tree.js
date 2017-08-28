@@ -132,7 +132,6 @@ define([
       }];
 
       $scope.backendApi.getData(requestPage).then((dataPages) => {
-        console.log(dataPages[0].qMatrix)
         // Display error when all measures' grand total return NaN.
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
