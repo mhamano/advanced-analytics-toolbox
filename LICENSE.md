@@ -1,7 +1,7 @@
 **Qlik Sense Advanced Analytics Toolbox is licensed under the "MIT" license:
 
 * [License](#license)
-* [External Libraries](#external libraries)
+* [External Libraries](#external-libraries)
 
 ---
 
@@ -57,4 +57,16 @@ These external libraries are used within this solution. Many thanks to the autho
 * Name: d3-format
 * License: BSD 3-clause "New" or "Revised" License (https://github.com/d3/d3-format/blob/master/LICENSE)
 * Url: https://github.com/d3/d3-format
+* Author: Mike Bostock
+
+**Library 5**
+* Name: d3
+* License: GNU General Public License, version 3 (https://github.com/d3/d3/blob/master/LICENSE)
+* Url: https://github.com/d3/d3
+* Author: Mike Bostock
+
+**Library 6**
+* Name: Collapsible Tree
+* License: GNU General Public License, version 3
+* Url: https://bl.ocks.org/mbostock/4339083
 * Author: Mike Bostock

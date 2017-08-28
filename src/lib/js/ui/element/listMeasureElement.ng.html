@@ -2,7 +2,7 @@
   <div class="lui-popover__header">
     <input type="text" class="lui-input" ng-model="meaSearchString">
   </div>
-  <div class="lui-popover__body lui-nopad object-add-popover-content" style="padding:0px;height:250px;overflow:scroll">
+  <div class="lui-popover__body lui-nopad object-add-popover-content" style="padding:0px;height:308px;overflow:scroll">
     <div class="object-add-popover-list-header">From a field</div>
     <ul class="lui-list">
       <li class="lui-list__item lui-list__action" ng-repeat="d in fieldList | filter: { label: meaSearchString }" ng-click="drilldownMeasure(<id>, d.label, d.value)" ng-class="{'derived-field': d.derivedField}">

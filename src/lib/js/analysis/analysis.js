@@ -30,6 +30,10 @@ define([], () => {
         name: 'Clustering',
       },
       {
+        id: 8,
+        name: 'Classification',
+      },
+      {
         id: 5,
         name: 'Text mining',
       },
@@ -343,6 +347,20 @@ define([], () => {
         dimButtonLabel: ['Add dimension'],
         meaButtonLabel: ['Add measure - Dataset: X-axis', 'Add measure - Dataset: Y-axis'],
         meaButtonLabelOthers: 'Add measure - Dataset',
+      },
+      {
+        id: 25,
+        category: 8,
+        name: 'Decision tree',
+        file: 'decision_tree',
+        minDims: 1,
+        minMeas: 2,
+        sortId: 0,
+        allowAddMea: true,
+        setCustomButtonLabel: true,
+        dimButtonLabel: ['Add dimension'],
+        meaButtonLabel: ['Add measure - Response variable', 'Add measure - Predictor variable'],
+        meaButtonLabelOthers: 'Add measure - Predictor variable',
       },
     ].sort((a, b) => {
       return a.sortId - b.sortId;
