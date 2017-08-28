@@ -43,14 +43,12 @@ Plot classification tree
 
     * (churn)
 
-
   6. Add the following measures as the predictor variables. The item "voice_mail_plan" contains categorical values ("yes" and "no") no numerical values, so make sure that you selected "(voice_mail_plan)", not "Sum(voice_mail_plan)".
 
     * Sum(number_customer_service_calls)
     * Sum(total_day_minutes)
     * Sum(total_eve_minutes)
     * (voice_mail_plan)
-
 
   7. A decision tree is displayed.
   ![pca screenshot](./images/decision_tree_example1-1.png)
@@ -68,14 +66,12 @@ Plot classification tree
 
     * ([Species])
 
-
   6. Add the following measures as the predictor variables.
 
     * Sum(Petal.Length)
     * Sum(Petal.Width)
     * Sum(Sepal.Length)
     * Sum(Sepal.Width)
-
-
   7. A decision tree is displayed.
+
   ![pca screenshot](./images/decision_tree_example2-1.png)
