@@ -50,10 +50,10 @@ Plot classification tree
     * Sum(total_eve_minutes)
     * (voice_mail_plan)
 
-  7. A decision tree is displayed.
+  7. A decision tree is displayed. The tree is collapsed to the third level in default, and you are able to collapse nodes by clicking on the one filled with blue color.
   ![pca screenshot](./images/decision_tree_example1-1.png)
 
-  8. Next, open [Analysis Settings] on the property panel and input 3 into [Max depth]. The depth of the tree node is changed to 3.
+  8. Open [Analysis Settings] on the property panel and input 3 into [Max depth]. The depth of the tree node is changed to 3.
   ![pca screenshot](./images/decision_tree_example1-2.png)
 
 ## Example2 - Iris
