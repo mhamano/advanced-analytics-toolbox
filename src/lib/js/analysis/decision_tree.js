@@ -141,7 +141,7 @@ define([
           if (result[1][0] == 'root') {
             // Set HTML element for chart
             $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" style="width:100%;height:100%;">
-              <p style="width:100%;text-align:center;position:relative;top:50%;transform:translateY(-50%);">Only root node is returned. Add predictor variables to grow the decision tree.
+              <p style="width:100%;text-align:center;position:relative;top:50%;transform:translateY(-50%);">Only root node is returned. More information needs to be provided to grow the decision tree.
               </div>`);
           } else {
             // var chartData = d3.hierarchy(result);
