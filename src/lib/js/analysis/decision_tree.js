@@ -63,7 +63,7 @@ define([
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(rpart);library(partykit);library(d3r);library(jsonlite);
+            qDef: `R.ScriptEvalExStr('${dataType}','library(rpart);library(partykit);library(d3r);library(jsonlite);set.seed(10);
                     q<-lapply(q, function(x){ ifelse(!is.na(as.numeric(x)), as.numeric(x), x) }); ${splitData}
                     res<-rpart(${meaList}, data=training_data, method="${layout.props.rpartMethod}", control=list(minsplit=${layout.props.minSplit}, minbucket=${layout.props.minBucket}, cp=${layout.props.cp}, maxdepth=${layout.props.maxDepth}));
                     pa<-partykit::as.party(res); if(length(pa) > 0) {node<-d3_party(res);} else {node <- c("root");}
