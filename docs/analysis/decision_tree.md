@@ -33,7 +33,7 @@ Plot classification tree
  * Split into training and test datasets - When turned on, the input data is split into training and test datasets.
  * Treat first N% records as training dataset - When "Split into training and test datasets" is turned on, the percentage of the first records specified here is treated as training data, and the rest is treated as test data.
 
-## Example1 - Customer Churn Data
+## Example1 (Classification Tree) - Customer Churn Data
   1. Download the following sample file.
     * churn ( [Download file](./data/churn.xlsx) | [Description on the dataset](https://rdrr.io/cran/C50/man/churn.html) )  
   2. Load the downloaded file into a new Qlik Sense app.
@@ -53,10 +53,10 @@ Plot classification tree
   7. A decision tree is displayed. The tree is collapsed to the third level in default, and you are able to collapse nodes by clicking on the one filled with blue color.
   ![pca screenshot](./images/decision_tree_example1-1.png)
 
-  8. Open [Analysis Settings] on the property panel and input 3 into [Max depth]. The depth of the tree node is changed to 3.
+  8. Open [Analysis Settings] on the property panel and input 3 into [Max depth]. The depth of the tree node is changed to 3. Here, you are able to find out the classification rules, for instance, when Sum(total_day_minutes) < 264.45 and Sum(number_customer_service_call) < 3.5, 'churn' is likely to be 'no'. (The numbers of records of 'no' and 'yes' which fall into this classification rule are 3178 and 265 respectively.)
   ![pca screenshot](./images/decision_tree_example1-2.png)
 
-## Example2 - Iris
+## Example2 (Classification Tree) - Iris
   1. Download the following sample file.
     * Iris ( [Download file](./data/Iris.xlsx) | [Description on the dataset](https://archive.ics.uci.edu/ml/datasets/iris) )  
   2. Load the downloaded file into a new Qlik Sense app.
@@ -75,3 +75,31 @@ Plot classification tree
   7. A decision tree is displayed.
 
   ![pca screenshot](./images/decision_tree_example2-1.png)
+
+## Example3 (Regression Tree) - White wine quality
+  1. Download the following sample file.
+    * Iris ( [Download file](./data/whitewine.xlsx) | [Description on the dataset](http://archive.ics.uci.edu/ml/datasets/Wine+Quality) )  
+  2. Load the downloaded file into a new Qlik Sense app.
+  3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Classification] > [Decision tree] for [Analysis Type]
+  4. Open [Analysis Settings] on the property panel and select [Anova] for [Method].
+  5. Select [ID] for a dimension.
+  6. We are adding 5 datasets for clustering. Press [+] button to add measure button, and select the following fields for the first measure as a response variable to be predicted. The 'quality' column includes the scores of white wine between 0 and 10.
+
+    * Sum(quality)
+
+  7. Add the following measures as the predictor variables.
+
+    * Sum(alcohol)
+    * Sum(chlorides)
+    * Sum([citric acid])
+    * Sum(density)
+    * Sum([fixed acidity])
+    * Sum([free sulfur dioxide])
+    * Sum(pH)
+    * Sum([residual sugar])
+    * Sum(sulphates)
+    * Sum([total sulfur dioxide])
+    * Sum([volatile acidity])
+  8. A decision tree is displayed. Here, you are able to find out the classification rules, for instance, when Sum(alcohol) >= 10.85, Sum([free sulfur dioxide]) > 11.5 and Sum(alcohol) >= 11.85, the average of quality score is 6.72.
+
+  ![pca screenshot](./images/decision_tree_example3-1.png)
