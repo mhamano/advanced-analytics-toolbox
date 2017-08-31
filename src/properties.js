@@ -843,7 +843,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             }],
             defaultValue: 'class',
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0;
+              return [25, 26].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           minSplit: {
@@ -852,7 +852,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             type: 'integer',
             defaultValue: 20,
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0;
+              return [25, 26].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           minBucket: {
@@ -861,7 +861,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             type: 'integer',
             defaultValue: 6,
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0;
+              return [25, 26].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           cp: {
@@ -870,7 +870,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             type: 'number',
             defaultValue: 0.01,
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0;
+              return [25, 26].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           maxDepth: {
@@ -879,7 +879,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             type: 'integer',
             defaultValue: 30,
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0;
+              return [25, 26].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           defaultCollapseLevel: {
@@ -933,7 +933,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             max: 0.99,
             defaultValue: 0.8,
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true;
+              return ([25].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true) || ([26].indexOf(data.props.analysisTypeId) >= 0);
             },
           },
         },

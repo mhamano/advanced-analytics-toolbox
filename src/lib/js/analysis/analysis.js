@@ -362,6 +362,20 @@ define([], () => {
         meaButtonLabel: ['Add measure - Response variable', 'Add measure - Predictor variable'],
         meaButtonLabelOthers: 'Add measure - Predictor variable',
       },
+      {
+        id: 26,
+        category: 8,
+        name: 'Decision tree - Evaluate model',
+        file: 'decision_tree_predict',
+        minDims: 1,
+        minMeas: 2,
+        sortId: 1,
+        allowAddMea: true,
+        setCustomButtonLabel: true,
+        dimButtonLabel: ['Add dimension'],
+        meaButtonLabel: ['Add measure - Response variable', 'Add measure - Predictor variable'],
+        meaButtonLabelOthers: 'Add measure - Predictor variable',
+      },
     ].sort((a, b) => {
       return a.sortId - b.sortId;
     }),
