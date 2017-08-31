@@ -38,5 +38,9 @@
   * [k-means - Cluster means/centers](kmeans_means.md) - Performs k-means clustering and display a bar chart of cluster means/centers.
   * [Find optimal number of clusters](kmeans_optimize.md) - Calculate the optimal number of clusters. Currently, gap statistic method is available.
 
+* Classification
+  * [Decision tree](decision_tree.md) - Plot classification/regression tree
+  * [Decision tree - Evaluate model](decision_tree_predict.md) - Display the result of model evaluation on decision tree
+
 * Text mining
   * [Text mining / Wordcloud](textmining_wordcloud.md) - Creates a corpus from the text data stored in a column, performs data processing and makes the wordcloud using the data.
