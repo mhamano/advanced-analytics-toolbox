@@ -922,7 +922,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             }],
             defaultValue: true,
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0;
+              return [25, 27].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           splitPercentage: {
@@ -933,7 +933,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             max: 0.99,
             defaultValue: 0.8,
             show: (data) => {
-              return ([25].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true) || ([26].indexOf(data.props.analysisTypeId) >= 0);
+              return ([25, 27].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true) || ([26].indexOf(data.props.analysisTypeId) >= 0);
             },
           },
         },
