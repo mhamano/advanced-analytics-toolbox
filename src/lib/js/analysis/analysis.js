@@ -383,7 +383,7 @@ define([], () => {
         file: 'logistic_regression',
         minDims: 1,
         minMeas: 2,
-        sortId: 1,
+        sortId: 2,
         allowAddMea: true,
         setCustomButtonLabel: true,
         dimButtonLabel: ['Add dimension'],
