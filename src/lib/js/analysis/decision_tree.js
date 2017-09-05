@@ -53,7 +53,7 @@ define([
         let test = 'test_data<-list(mea0=q$mea0[(data_mid + 1):data_end]';
         for (let i = 1; i < meaLen; i++) {
           training += `,mea${i}=q$mea${i}[1:data_mid]`;
-          test += `,mea${i}=q$mea${i}[(data_mid + 1):data_end]`
+          test += `,mea${i}=q$mea${i}[(data_mid + 1):data_end]`;
         }
         training += ');';
         test += ');';
