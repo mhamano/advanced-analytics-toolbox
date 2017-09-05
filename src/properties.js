@@ -925,8 +925,8 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
               return [25].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
-          splitPercentageForDecisionTree: {
-            ref: 'props.splitPercentageForDecisionTree',
+          splitPercentage: {
+            ref: 'props.splitPercentage',
             label: 'Treat first N% records as training dataset',
             type: 'number',
             min: 0.01,

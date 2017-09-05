@@ -49,7 +49,7 @@ define([
       // Split dataset into training and test datasets
       let splitData = 'training_data<-q;';
       if (layout.props.splitDataset) {
-        let training = `splitPercentage<-min(max(0.01, ${layout.props.splitPercentageForDecisionTree}), 0.99); data_end<-length(q$mea0); data_mid<-floor(data_end * splitPercentage); training_data<-list(mea0=q$mea0[1:data_mid]`;
+        let training = `splitPercentage<-min(max(0.01, ${layout.props.splitPercentage}), 0.99); data_end<-length(q$mea0); data_mid<-floor(data_end * splitPercentage); training_data<-list(mea0=q$mea0[1:data_mid]`;
         let test = 'test_data<-list(mea0=q$mea0[(data_mid + 1):data_end]';
         for (let i = 1; i < meaLen; i++) {
           training += `,mea${i}=q$mea${i}[1:data_mid]`;
