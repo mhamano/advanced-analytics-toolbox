@@ -1,6 +1,6 @@
 define([
   './ui_element',
-  '/resources/assets/external/leonardo-ui/leonardo-ui.min.js',
+  '../../../../../../resources/assets/external/leonardo-ui/leonardo-ui.min.js',
 ], (uiElement, leonardoui) => {
   return {
     registerEvents($scope, $compile) {
