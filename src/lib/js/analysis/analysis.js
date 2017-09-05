@@ -376,6 +376,20 @@ define([], () => {
         meaButtonLabel: ['Add measure - Response variable', 'Add measure - Predictor variable'],
         meaButtonLabelOthers: 'Add measure - Predictor variable',
       },
+      {
+        id: 27,
+        category: 8,
+        name: 'Logistic regression analysis',
+        file: 'logistic_regression',
+        minDims: 1,
+        minMeas: 2,
+        sortId: 1,
+        allowAddMea: true,
+        setCustomButtonLabel: true,
+        dimButtonLabel: ['Add dimension'],
+        meaButtonLabel: ['Add measure - Response variable', 'Add measure - Predictor variable'],
+        meaButtonLabelOthers: 'Add measure - Predictor variable',
+      },
     ].sort((a, b) => {
       return a.sortId - b.sortId;
     }),
