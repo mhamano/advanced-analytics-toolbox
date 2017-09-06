@@ -134,6 +134,7 @@ define([
           const residualDeviance = result[8];
           const residualDf = result[9];
           const aic = result[10];
+          const iter = result[11];
 
           // Set table header
           let html = `
@@ -186,6 +187,7 @@ define([
                 <tr><td>Null deviance</td><td>${nullDeviance[0]} on ${nullDf[0]} degrees of freedom</td></tr>
                 <tr><td>Residual deviance</td><td>${residualDeviance[0]} on ${residualDf[0]} degrees of freedom</td></tr>
                 <tr><td>AIC</td><td>${aic[0]}</td></tr>
+                <tr><td>Number of Fisher Scoring iterations</td><td>${iter[0]}</td></tr>
              </tbody>
             </table>
           `;
