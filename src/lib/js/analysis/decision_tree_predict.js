@@ -192,7 +192,6 @@ define([
               precisionNumerator += data[i][j];
               recallNumerator[j] += data[i][j];
               if (rowLabels[i] === columnLabels[j]) {
-                console.log(rowLabels[i], columnLabels[j]);
                 accuracyDenominator += data[i][j];
                 precisionDenominator += data[i][j];
                 recallDenominator[j] += data[i][j];
