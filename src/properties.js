@@ -920,7 +920,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
               value: false,
               label: 'Off',
             }],
-            defaultValue: true,
+            defaultValue: false,
             show: (data) => {
               return [25, 27].indexOf(data.props.analysisTypeId) >= 0;
             },
