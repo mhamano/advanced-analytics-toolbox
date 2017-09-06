@@ -39,7 +39,7 @@ Plot classification/regression tree
   2. Load the downloaded file into a new Qlik Sense app.
   3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Classification] > [Decision tree] for [Analysis Type]
   4. Select [ID] for a dimension.
-  5. We are adding t datasets for clustering. Press [+] button to add measure button, and select the following fields for the first measure as a response variable to be predicted. The item "churn" contains categorical values ("yes" and "no") no numerical values, so make sure that you selected "(churn)", not "Sum(churn)".
+  5. We are adding 5 datasets for clustering. Press [+] button to add measure button, and select the following fields for the first measure as a response variable to be predicted. The item "churn" contains categorical values ("yes" and "no") no numerical values, so make sure that you selected "(churn)", not "Sum(churn)".
 
     * (churn)
 
@@ -53,8 +53,10 @@ Plot classification/regression tree
   7. A decision tree is displayed. The tree is collapsed to the third level in default, and you are able to collapse nodes by clicking on the one filled with blue color.
   ![pca screenshot](./images/decision_tree_example1-1.png)
 
-  8. Open [Analysis Settings] on the property panel and input 3 into [Max depth]. The depth of the tree node is changed to 3. Here, you are able to find out the classification rules, for instance, when Sum(total_day_minutes) < 264.45 and Sum(number_customer_service_call) < 3.5, 'churn' is likely to be 'no'. (The numbers of records of 'no' and 'yes' which fall into this classification rule are 3178 and 265 respectively.)
+  8. Open [Analysis Settings] on the property panel and input 3 into [Max depth]. The depth of the tree node is changed to 3. Here, you are able to find out the classification rules, for instance, when Sum(total_day_minutes) < 264.45 and Sum(number_customer_service_call) < 3.5, 'churn' is likely to be 'no'. (The numbers of records of 'no' and 'yes' which fall into this classification rule are 3976 and 336 respectively.)
   ![pca screenshot](./images/decision_tree_example1-2.png)
+
+  9. Open [Analysis Settings] on the property panel and turn on the [Split into training and test datasets] switch. Top 80% of records are treated as a training dataset, and decision tree is updated to use the training dataset only excluding the remaining 20% for a test dataset.
 
 ## Example2 (Classification Tree) - Iris
   1. Download the following sample file.
@@ -82,7 +84,7 @@ Plot classification/regression tree
   2. Load the downloaded file into a new Qlik Sense app.
   3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Classification] > [Decision tree] for [Analysis Type]
   4. Open [Analysis Settings] on the property panel and select [Anova] for [Method].
-  5. Select [ID] for a dimension.
+  5. Select [id] for a dimension.
   6. We are adding 5 datasets for clustering. Press [+] button to add measure button, and select the following fields for the first measure as a response variable to be predicted. The 'quality' column includes the scores of white wine between 0 and 10.
 
     * Sum(quality)
@@ -100,6 +102,6 @@ Plot classification/regression tree
     * Sum(sulphates)
     * Sum([total sulfur dioxide])
     * Sum([volatile acidity])
-  8. A decision tree is displayed. Here, you are able to find out the classification rules, for instance, when Sum(alcohol) >= 10.85, Sum([free sulfur dioxide]) > 11.5 and Sum(alcohol) >= 11.85, the average of quality score is 6.72.
+  8. A decision tree is displayed. Here, you are able to find out the classification rules, for instance, when Sum(alcohol) >= 10.85, Sum([free sulfur dioxide]) >= 11.5 and Sum(alcohol) >= 11.74167, the average of quality score is 6.6.
 
   ![pca screenshot](./images/decision_tree_example3-1.png)
