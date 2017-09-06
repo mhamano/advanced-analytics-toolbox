@@ -41,23 +41,12 @@ define([
       }
 
       // Split dataset into training and test datasets
-      let splitData = 'training_data<-q;';
-      if (layout.props.splitDataset) {
-        let training = `splitPercentage<-min(max(0.01, ${layout.props.splitPercentage}), 0.99); data_end<-length(q$mea0); data_mid<-floor(data_end * splitPercentage); training_data<-list(mea0=q$mea0[1:data_mid]`;
-        let test = 'test_data<-list(mea0=q$mea0[(data_mid + 1):data_end]';
-        for (let i = 1; i < meaLen; i++) {
-          training += `,mea${i}=q$mea${i}[1:data_mid]`;
-          test += `,mea${i}=q$mea${i}[(data_mid + 1):data_end]`
-        }
-        training += ');';
-        test += ');';
-        splitData = training + test;
-      }
+      const splitData = utils.splitData(layout.props.splitDataset, layout.props.splitPercentage, meaLen);
 
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); save(q,file="~/QlikDataFrame.rda"); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));lm_summary <- summary(lm_result);
+            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));lm_summary <- summary(lm_result);
             json <- toJSON(list(coef(lm_summary)[,"Estimate"], coef(lm_summary)[,"Std. Error"], coef(lm_summary)[,"z value"], coef(lm_summary)[,"Pr(>|z|)"],
             as.double(summary(lm_summary$deviance.resid)), lm_summary$dispersion, lm_summary$null.deviance, lm_summary$df.null, lm_summary$deviance, lm_summary$df.residual, lm_summary$aic, lm_summary$iter)); json;',${params})`,
           },
@@ -130,7 +119,6 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
-          console.log(dataPages[0].qMatrix[0][1].qText)
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           const estimate = result[0];

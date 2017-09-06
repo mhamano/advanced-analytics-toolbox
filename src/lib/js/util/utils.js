@@ -4,6 +4,29 @@ define([
   return {
 
     /**
+     * splitDataset - Create R Script to split input data into training and test datasets
+     *
+     * @param  {Object} layout Layout
+     * @param  {Number} meaLen Length of measures
+     * @return {String}        R script to split datasets
+     */
+    splitData(splitDatasetFlag, splitPercentage, meaLen) {
+      let splitData = 'training_data<-q;';
+      if (splitDatasetFlag) {
+        let training = `splitPercentage<-min(max(0.01, ${splitPercentage}), 0.99); data_end<-length(q$mea0); data_mid<-floor(data_end * splitPercentage); training_data<-list(mea0=q$mea0[1:data_mid]`;
+        let test = 'test_data<-list(mea0=q$mea0[(data_mid + 1):data_end]';
+        for (let i = 1; i < meaLen; i++) {
+          training += `,mea${i}=q$mea${i}[1:data_mid]`;
+          test += `,mea${i}=q$mea${i}[(data_mid + 1):data_end]`;
+        }
+        training += ');';
+        test += ');';
+        splitData = training + test;
+      }
+      return splitData;
+    },
+
+    /**
      * displayLoader - Display loader circle
      *
      * @param {String} extId extension ID
