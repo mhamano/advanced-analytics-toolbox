@@ -1,7 +1,42 @@
 define([
   '../../vendor/d3-format.min',
-], (d3) => {
+], (d3, $q) => {
   return {
+
+    /**
+     * pageExtensionData - Iterate through all datapages of hypercube
+     *
+     * @param  {Object} $scope   angular $scope
+     * @param  {Object} callback callback function
+     */
+    pageExtensionData($scope, callback) {
+      let lastrow = 0;
+      const colNums = $scope.layout.qHyperCube.qSize.qcx;
+
+      // initialProperty sets 1500 for dataFetch hight
+      const datapageSize = 1500;
+
+      $scope.backendApi.eachDataRow((rownum, row) => {
+        lastrow = rownum;
+      });
+      if ($scope.backendApi.getRowCount() > lastrow + 1) {
+        const requestPage = [{
+          qTop: lastrow + 1,
+          qLeft: 0,
+          qWidth: colNums,
+          qHeight: Math.min(datapageSize, $scope.backendApi.getRowCount() - lastrow),
+        }];
+        $scope.backendApi.getData(requestPage).then(() => {
+          this.pageExtensionData($scope, callback);
+        });
+      } else {
+        let dataset = [];
+        $.each($scope.layout.qHyperCube.qDataPages, (key, value) => {
+          dataset = dataset.concat(value.qMatrix);
+        });
+        callback(dataset);
+      }
+    },
 
     /**
      * splitDataset - Create R Script to split input data into training and test datasets
