@@ -214,7 +214,12 @@ define([
               side: 'right',
               range: [(maxValMea2) * -1 * 1.1, maxValMea2 * 1.1],
             },
-            margin: { r: 50, l: 50, t: 50, b: 50 },
+            margin: {
+              r: ($scope.layout.props.yAxisPosition == 'right') ? $scope.layout.props.marginRight + 70 : $scope.layout.props.marginRight,
+              l: ($scope.layout.props.yAxisPosition == 'left') ? $scope.layout.props.marginLeft + 70 : $scope.layout.props.marginLeft,
+              t: ($scope.layout.props.xAxisPosition == 'top') ? $scope.layout.props.marginTop + 70 : $scope.layout.props.marginTop,
+              b: ($scope.layout.props.xAxisPosition == 'bottom') ? $scope.layout.props.marginBottom + 70 : $scope.layout.props.marginBottom,
+            },
             annotations: [
             ],
           }

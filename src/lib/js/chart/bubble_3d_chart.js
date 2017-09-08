@@ -38,7 +38,12 @@ define([
         },
         separators: utils.getSeparators($scope, 0),
         dragmode: 'select',
-        margin: { r: 10, t: 0 }
+        margin: {
+          r: ($scope.layout.props.yAxisPosition == 'right') ? $scope.layout.props.marginRight + 70 : $scope.layout.props.marginRight,
+          l: ($scope.layout.props.yAxisPosition == 'left') ? $scope.layout.props.marginLeft + 70 : $scope.layout.props.marginLeft,
+          t: ($scope.layout.props.xAxisPosition == 'top') ? $scope.layout.props.marginTop + 70 : $scope.layout.props.marginTop,
+          b: ($scope.layout.props.xAxisPosition == 'bottom') ? $scope.layout.props.marginBottom + 70 : $scope.layout.props.marginBottom,
+        },
       };
 
       $.extend(options, customOptions);

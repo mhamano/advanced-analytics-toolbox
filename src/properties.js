@@ -1009,6 +1009,58 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                   return [1, 10, 16, 19, 25].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
+              marginTop: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin top',
+                ref: 'props.marginTop',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
+              marginBottom: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin bottom',
+                ref: 'props.marginBottom',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
+              marginRight: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin right',
+                ref: 'props.marginRight',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
+              marginLeft: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin left',
+                ref: 'props.marginLeft',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
               defineScreenSize: {
                 type: 'boolean',
                 component: 'switch',
