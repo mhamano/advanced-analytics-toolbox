@@ -38,7 +38,7 @@ Plot classification/regression tree
     * churn ( [Download file](./data/churn.xlsx) | [Description on the dataset](https://rdrr.io/cran/C50/man/churn.html) )  
   2. Load the downloaded file into a new Qlik Sense app.
   3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Classification] > [Decision tree] for [Analysis Type]
-  4. Select [ID] for a dimension.
+  4. Select [id] for a dimension.
   5. We are adding 5 datasets for clustering. Press [+] button to add measure button, and select the following fields for the first measure as a response variable to be predicted. The item "churn" contains categorical values ("yes" and "no") no numerical values, so make sure that you selected "(churn)", not "Sum(churn)".
 
     * (churn)
