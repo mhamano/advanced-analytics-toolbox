@@ -31,6 +31,6 @@ Plots the coefficients from a regression model.
   ![logistic regression predict example1](./images/logistic_regression_coefplot_example1-1.png)
 
 ## Example2 - Customer Churn Data
- 1. Follow the instruction of example 2 explained on [Logistic regression analysis](./logistic_regression.md). Select [Classification] > [Logistic regression - Plot coefficients] for [Analysis Type].
+ 1. Follow the instruction of example 2 explained on [Logistic regression analysis](./logistic_regression.md). Select [Classification] > [Logistic regression - Plot coefficients] for [Analysis Type]. Open [Appearance] > [Presentation] on the property panel and adjust the margins.
  2. The coefficients from the Multiple regression model are plotted on the chart. The chart visually shows that "number_customer_service_calls" has positive relationship with response variable of "churn", suggesting that the higher "number_customer_service_calls" value is associated with high possibility for the customer to churn. On the other hand, "voice_mail_plan" has negative relationship indicating that when a customer purchases a voice mail plan, it is less likely that the customer churns.
-   ![logistic regression predict example1](./images/logistic_regression_coefplot_example1-1.png)
+   ![logistic regression predict example1](./images/logistic_regression_coefplot_example2-1.png)
