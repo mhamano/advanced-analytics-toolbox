@@ -131,7 +131,7 @@ define([
           const array = [];
           const arrayminus = [];
           const all = [];
-console.log(result)
+
           for (let i = 0; i < result[0].length; i++) {
             x.push(result[0][i]);
 
@@ -147,7 +147,7 @@ console.log(result)
               all.push(Math.abs(result[0][i] + result[2][i]));
             }
           }
-console.log(x, array, arrayminus)
+
           const maxVal = Math.max.apply(null, all);
 
           const chartData = [
