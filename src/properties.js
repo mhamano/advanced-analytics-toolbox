@@ -908,6 +908,23 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
               return [25].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
+          calcOddsRatio: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Calculate odds ratio',
+            ref: 'props.calcOddsRatio',
+            options: [{
+              value: true,
+              label: 'On',
+            }, {
+              value: false,
+              label: 'Off',
+            }],
+            defaultValue: true,
+            show: (data) => {
+              return [29].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
           splitDataset: {
             type: 'boolean',
             component: 'switch',

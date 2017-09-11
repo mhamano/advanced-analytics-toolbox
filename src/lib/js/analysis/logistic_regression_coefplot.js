@@ -41,6 +41,11 @@ define([
          }
        }
 
+       let calcCoef = 'coef(summary(lm_result))';
+       if (layout.props.calcOddsRatio) {
+         calcCoef = 'exp(coef(summary(lm_result)))';
+       }
+
        // Split dataset into training and test datasets
        const splitData = utils.splitData(layout.props.splitDataset, layout.props.splitPercentage, meaLen);
 
@@ -48,7 +53,7 @@ define([
          {
            qDef: {
              qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));
-             res<-toJSON(coef(summary(lm_result)));res;',${params})`,
+             res<-toJSON(${calcCoef});res;',${params})`,
            },
          },
          {
