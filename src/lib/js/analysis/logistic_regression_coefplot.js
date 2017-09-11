@@ -41,9 +41,9 @@ define([
          }
        }
 
-       let calcCoef = 'coef(summary(lm_result))';
+       let calcCoef = 'list(coef(coe)[,1], coef(coe)[,2], coef(coe)[,2])';
        if (layout.props.calcOddsRatio) {
-         calcCoef = 'exp(coef(summary(lm_result)))';
+         calcCoef = 'list(exp(coef(coe)[,1]), exp(coef(coe)[,1] - 1.96*coef(coe)[,2]), exp(coef(coe)[,1] + 1.96*coef(coe)[,2]))';
        }
 
        // Split dataset into training and test datasets
@@ -52,7 +52,7 @@ define([
        const measures = [
          {
            qDef: {
-             qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));
+             qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit")); coe<-summary(lm_result);
              res<-toJSON(${calcCoef});res;',${params})`,
            },
          },
@@ -129,26 +129,37 @@ define([
 
           const x = [];
           const array = [];
+          const arrayminus = [];
           const all = [];
-          $.each(result, (key, value) => {
-            x.push(value[0]);
-            array.push(value[1]);
-            all.push(Math.abs(value[0] + value[1]));
-            all.push(Math.abs(value[0] - value[1]));
-          });
+console.log(result)
+          for (let i = 0; i < result[0].length; i++) {
+            x.push(result[0][i]);
 
+            if (layout.props.calcOddsRatio) {
+              array.push(result[2][i] - result[0][i]);
+              arrayminus.push(result[0][i] - result[1][i]);
+              all.push(Math.abs(result[1][i]));
+              all.push(Math.abs(result[2][i]));
+            } else {
+              array.push(result[1][i]);
+              arrayminus.push(result[2][i]);
+              all.push(Math.abs(result[0][i] - result[1][i]));
+              all.push(Math.abs(result[0][i] + result[2][i]));
+            }
+          }
+console.log(x, array, arrayminus)
           const maxVal = Math.max.apply(null, all);
 
           const chartData = [
             {
-              x: x,
+              x,
               y: $scope.rowsLabel,
               name: 'Coefficients plot',
               error_x: {
                 type: 'data',
                 symmetric: false,
-                array: array,
-                arrayminus: array,
+                array,
+                arrayminus,
                 thickness: layout.props.borderWidth,
                 color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
               },

@@ -2,7 +2,7 @@
 Performs logistic analysis.
 
 ## Screenshot
-  ![logistic regression analysis example1](./images/logistic_regression_example1-1.png)
+  ![logistic regression analysis example1](./images/logistic_regression_example2-2.png)
 
 ## Prerequisite R packages
  * jsonlite
@@ -26,34 +26,7 @@ Performs logistic analysis.
 * Split into training and test datasets - When turned on, the input data is split into training and test datasets.
 * Treat first N% records as training dataset - When "Split into training and test datasets" is turned on, the percentage of the first records specified here is treated as training data, and the rest is treated as test data.
 
-## Example1 - Motor Trend Car Road Tests
-The Motor trend car road tests dataset includes fuel consumption of different types of cars and 10 aspects of automobile design. The dataset includes the following columns:
- * am - the transmission type of the automobile model (0 = automatic, 1 = manual)
- * cyl - Number of cylinders
- * hp - Gross horsepower
- * wt - Weight (1000 lbs)
-
-In this example, we create a logistic regression model between the columns "am" and 3 other columns.
-
-1. Download the following sample file.
- * mtcars ( [Download file](./data/mtcars.xlsx) | [Description on the dataset](https://www.rdocumentation.org/packages/datasets/versions/3.4.1/topics/mtcars) )  
-2. Load the downloaded file into a new Qlik Sense app.
-3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Classification]  > [Logistic regression Analysis] for [Analysis Type]
-4. Select [name] for a dimension.
-5. We are adding 4 datasets for clustering. Press [+] button to add measure button, and select the following fields for the first measure as a response variable to be predicted.
-
-  * Sum([am])
-
-6. Add the following measures as the predictor variables.
-
-  * Sum([cyl])
-  * Sum([hp])
-  * Sum([wt])
-
-7. We can see that p-value of 'Sum([wt])' is less that 0.05 indicating that the variable is significant in contributing to the value of the variable "am". The p-values of other two variables is more than 0.05 suggesting that they are insignificant.
-  ![logistic regression analysis example1](./images/logistic_regression_example1-1.png)
-
-## Example2 - Customer Churn Data
+## Example1 - Customer Churn Data
   1. Download the following sample file.
     * churn ( [Download file](./data/churn.xlsx) | [Description on the dataset](https://rdrr.io/cran/C50/man/churn.html) )  
   2. Load the downloaded file into a new Qlik Sense app.  The columns of "churn" and "voice_mail_plan" which we are going to use for logistic analysis contain categorical values ("yes" and "no"), but only numerical values can be used for logistic analysis. So, on the table view of Qlik Sense data manager, we replace "yes" and "no" with "1" and "0" respectively contained in the both columns by following the procedure of [Replacing field values in a table](http://help.qlik.com/en-US/sense/June2017/Subsystems/Hub/Content/LoadData/replacing-field-values.htm).

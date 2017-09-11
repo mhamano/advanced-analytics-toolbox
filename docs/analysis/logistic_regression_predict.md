@@ -2,7 +2,7 @@
 Display the result of model evaluation on logistic regression analysis
 
 ## Screenshot
-  ![logistic regression predict example1](./images/logistic_regression_predict_example1-1.png)
+  ![logistic regression predict example1](./images/logistic_regression_predict_example2-1.png)
 
 ## Prerequisite R packages
  * jsonlite
@@ -25,12 +25,7 @@ Display the result of model evaluation on logistic regression analysis
 ## Options
 * Treat first N% records as training dataset - When "Split into training and test datasets" is turned on, the percentage of the first records specified here is treated as training data, and the rest is treated as test data.
 
-## Example1 - Motor Trend Car Road Tests
-1.  In this example, we evaluate the logistic regression model created on the example 1 of [Logistic regression analysis](./logistic_regression.md). Follow the instruction of example 1 explained on [Logistic regression analysis](./logistic_regression.md). Select [Classification] > [Logistic regression - Evaluate model] for [Analysis Type].
-2. The result shows the confusion matrix of predicted and actual class, accuracy, precision recall, etc.
-  ![logistic regression predict example1](./images/logistic_regression_predict_example1-1.png)
-
-## Example2 - Customer Churn Data
+## Example1 - Customer Churn Data
  1. Follow the instruction of example 2 explained on [Logistic regression analysis](./logistic_regression.md). Select [Classification] > [Logistic regression - Evaluate model] for [Analysis Type].
  2. The result shows the confusion matrix of predicted and actual class, accuracy, precision recall, etc.
    ![logistic regression predict example1](./images/logistic_regression_predict_example2-1.png)

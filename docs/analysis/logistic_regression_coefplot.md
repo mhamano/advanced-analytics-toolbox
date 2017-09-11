@@ -2,7 +2,7 @@
 Plots the coefficients from a regression model.
 
 ## Screenshot
-  ![coef example1](./images/logistic_regression_coefplot_example1-1.png)
+  ![coef example1](./images/logistic_regression_coefplot_example2-1.png)
 
 ## Prerequisite R packages
 
@@ -22,15 +22,12 @@ Plots the coefficients from a regression model.
   * Measure 2-: Predictor variables
 
 ## Options
+* Calculate odds ratio -  When turned on, odds ratio is calculated and displayed (Exponentiated coefficients are calculated)
 * Split into training and test datasets - When turned on, the input data is split into training and test datasets.
 * Treat first N% records as training dataset - When "Split into training and test datasets" is turned on, the percentage of the first records specified here is treated as training data, and the rest is treated as test data.
 
-## Example1 - Motor Trend Car Road Tests
-1.  In this example, we evaluate the logistic regression model created on the example 1 of [Logistic regression analysis](./logistic_regression.md). Follow the instruction of example 1 explained on [Logistic regression analysis](./logistic_regression.md). Select [Classification] > [Logistic regression - Plot coefficients] for [Analysis Type].
-2. The coefficients from the Multiple regression model are plotted on the chart. The chart visually shows that "wt"(Weight) has negative relationship with response variable of "am" (The transmission type of the automobile model: 0 = automatic, 1 = manual), suggesting that the higher wt value is associated with lower possibility for the automobile model to be manual.
-  ![logistic regression predict example1](./images/logistic_regression_coefplot_example1-1.png)
-
-## Example2 - Customer Churn Data
+## Example1 - Customer Churn Data
  1. Follow the instruction of example 2 explained on [Logistic regression analysis](./logistic_regression.md). Select [Classification] > [Logistic regression - Plot coefficients] for [Analysis Type]. Open [Appearance] > [Presentation] on the property panel and adjust the margins.
- 2. The coefficients from the Multiple regression model are plotted on the chart. The chart visually shows that "number_customer_service_calls" has positive relationship with response variable of "churn", suggesting that the higher "number_customer_service_calls" value is associated with high possibility for the customer to churn. On the other hand, "voice_mail_plan" has negative relationship indicating that when a customer purchases a voice mail plan, it is less likely that the customer churns.
+ 2. The odds ratio from the Multiple regression model are plotted on the chart. The chart visually shows that when "number_customer_service_calls" value increased by one unit, the probability for the customer to churn increase by 57% (1.5739). On the other hand, the probability for customer to churn is approximately 1/3 (0.383) when a customer purchases "voice_mail_plan", compared with the case when the customer did not purchase the plan.
    ![logistic regression predict example1](./images/logistic_regression_coefplot_example2-1.png)
+ 3. Turn off the [Calculate odds ration] option from [Analysis Settings] on the property panel, and coefficients are displayed instead of odds ration.
