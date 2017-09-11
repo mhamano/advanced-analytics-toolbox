@@ -118,7 +118,7 @@ define([
         qHeight: 1500,
       }];
 
-      $scope.backendApi.getData(requestPage).then((dataPages) => {
+      utils.pageExtensionData($scope, (dataPages) => {
         const measureInfo = $scope.layout.qHyperCube.qMeasureInfo;
 
         // Display error when all measures' grand total return NaN.
@@ -137,7 +137,7 @@ define([
             bubbleData[i].z = [];
           }
 
-          $.each(dataPages[0].qMatrix, (key, value) => {
+          $.each(dataPages, (key, value) => {
             bubbleData[value[4].qNum].text.push(value[0].qText);
             bubbleData[value[4].qNum].x.push(value[1].qNum);
             bubbleData[value[4].qNum].y.push(value[2].qNum);

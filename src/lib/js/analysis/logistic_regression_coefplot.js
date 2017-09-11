@@ -12,83 +12,92 @@ define([
      *
      * @return {Null} null
      */
-    createCube(app, $scope) {
-      const layout = $scope.layout;
+     createCube(app, $scope) {
+       const layout = $scope.layout;
 
-      // Display loader
-      // utils.displayLoader($scope.extId);
+       // Display loader
+       // utils.displayLoader($scope.extId);
 
-      const dimension = utils.validateDimension(layout.props.dimensions[0]);
+       const dimension = utils.validateDimension(layout.props.dimensions[0]);
 
-      // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+       // Set definitions for dimensions and measures
+       const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
 
-      const meaLen = layout.props.measures.length;
-      $scope.rowsLabel = ['(Intercept)', utils.validateMeasure(layout.props.measures[1])]; // Label for dimension values
-      let params = `${utils.validateMeasure(layout.props.measures[0])} as mea0, ${utils.validateMeasure(layout.props.measures[1])} as mea1`;
-      let meaList = 'q$mea0 ~ q$mea1';
-      let dataType = 'NN';
+       const meaLen = layout.props.measures.length;
+       $scope.rowsLabel = ['(Intercept)', (layout.props.measures[1].label != '') ? layout.props.measures[1].label : utils.validateMeasure(layout.props.measures[0]) ]; // Label for dimension values
+       let params = `${utils.validateMeasure(layout.props.measures[0])} as mea0, ${utils.validateMeasure(layout.props.measures[1])} as mea1`;
+       let meaList = 'mea0 ~ mea1';
+       let dataType = 'NN';
 
-      for (let i = 2; i < meaLen; i++) {
-        const mea = utils.validateMeasure(layout.props.measures[i]);
-        if (mea.length > 0) {
-          const param = `,${mea} as mea${i}`;
-          params += param;
-          meaList += ` + q$mea${i}`;
-          dataType += 'N';
+       for (let i = 2; i < meaLen; i++) {
+         const mea = utils.validateMeasure(layout.props.measures[i]);
+         if (mea.length > 0) {
+           const param = `,${mea} as mea${i}`;
+           params += param;
+           meaList += ` + mea${i}`;
+           dataType += 'N';
 
-          $scope.rowsLabel.push(utils.validateMeasure(layout.props.measures[i]));
-        }
-      }
+           $scope.rowsLabel.push(utils.validateMeasure(layout.props.measures[i]));
+         }
+       }
 
-      const measures = [
-        {
-          qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite);lm_result <- lm(${meaList});res<-toJSON(coef(summary(lm_result)));res;',${params})`,
-          },
-        },
-        {
-          qDef: {
-            qLabel: '-',
-            qDef: '', // Dummy
-          },
-        },
-        {
-          qDef: {
-            qLabel: '-',
-            qDef: '', // Dummy
-          },
-        },
-        {
-          qDef: {
-            qLabel: '-',
-            qDef: '', // Dummy
-          },
-        },
-        {
-          qDef: {
-            qLabel: '-',
-            qDef: '', // Dummy
-          },
-        },
-      ];
+       let calcCoef = 'list(coef(coe)[,1], coef(coe)[,2], coef(coe)[,2])';
+       if (layout.props.calcOddsRatio) {
+         calcCoef = 'list(exp(coef(coe)[,1]), exp(coef(coe)[,1] - 1.96*coef(coe)[,2]), exp(coef(coe)[,1] + 1.96*coef(coe)[,2]))';
+       }
 
-      $scope.backendApi.applyPatches([
-        {
-          qPath: '/qHyperCubeDef/qDimensions',
-          qOp: 'replace',
-          qValue: JSON.stringify(dimensions),
-        },
-        {
-          qPath: '/qHyperCubeDef/qMeasures',
-          qOp: 'replace',
-          qValue: JSON.stringify(measures),
-        },
-      ], false);
+       // Split dataset into training and test datasets
+       const splitData = utils.splitData(layout.props.splitDataset, layout.props.splitPercentage, meaLen);
 
-      $scope.patchApplied = true;
-      return null;
-    },
+       const measures = [
+         {
+           qDef: {
+             qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit")); coe<-summary(lm_result);
+             res<-toJSON(${calcCoef});res;',${params})`,
+           },
+         },
+         {
+           qDef: {
+             qLabel: '-',
+             qDef: '', // Dummy
+           },
+         },
+         {
+           qDef: {
+             qLabel: '-',
+             qDef: '', // Dummy
+           },
+         },
+         {
+           qDef: {
+             qLabel: '-',
+             qDef: '', // Dummy
+           },
+         },
+         {
+           qDef: {
+             qLabel: '-',
+             qDef: '', // Dummy
+           },
+         },
+       ];
+
+       $scope.backendApi.applyPatches([
+         {
+           qPath: '/qHyperCubeDef/qDimensions',
+           qOp: 'replace',
+           qValue: JSON.stringify(dimensions),
+         },
+         {
+           qPath: '/qHyperCubeDef/qMeasures',
+           qOp: 'replace',
+           qValue: JSON.stringify(measures),
+         },
+       ], false);
+
+       $scope.patchApplied = true;
+       return null;
+     },
     /**
     * drawChart - draw chart with updated data
     *
@@ -120,26 +129,37 @@ define([
 
           const x = [];
           const array = [];
+          const arrayminus = [];
           const all = [];
-          $.each(result, (key, value) => {
-            x.push(value[0]);
-            array.push(value[1]);
-            all.push(Math.abs(value[0] + value[1]));
-            all.push(Math.abs(value[0] - value[1]));
-          });
+
+          for (let i = 0; i < result[0].length; i++) {
+            x.push(result[0][i]);
+
+            if (layout.props.calcOddsRatio) {
+              array.push(result[2][i] - result[0][i]);
+              arrayminus.push(result[0][i] - result[1][i]);
+              all.push(Math.abs(result[1][i]));
+              all.push(Math.abs(result[2][i]));
+            } else {
+              array.push(result[1][i]);
+              arrayminus.push(result[2][i]);
+              all.push(Math.abs(result[0][i] - result[1][i]));
+              all.push(Math.abs(result[0][i] + result[2][i]));
+            }
+          }
 
           const maxVal = Math.max.apply(null, all);
 
           const chartData = [
             {
-              x: x,
+              x,
               y: $scope.rowsLabel,
               name: 'Coefficients plot',
               error_x: {
                 type: 'data',
                 symmetric: false,
-                array: array,
-                arrayminus: array,
+                array,
+                arrayminus,
                 thickness: layout.props.borderWidth,
                 color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
               },

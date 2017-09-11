@@ -38,7 +38,7 @@ In this example, we seek to evaluate if there is a difference in the mean of the
   * mtcars ( [Download file](./data/mtcars.xlsx) | [Description on the dataset](https://www.rdocumentation.org/packages/datasets/versions/3.4.1/topics/mtcars) )  
 2. Load the downloaded file into a new Qlik Sense app.
 3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Statistical hypothesis testing] > [T-Test - Welch two sample T-Test] for [Analysis Type]
-4. Select [ID] for a dimension.
+4. Select [name] for a dimension.
 5. From the property panel on the right-side, add two measures with the following expressions:
 
     `Only({<am={0}>} mpg)`    

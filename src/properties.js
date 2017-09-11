@@ -908,6 +908,23 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
               return [25].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
+          calcOddsRatio: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Calculate odds ratio',
+            ref: 'props.calcOddsRatio',
+            options: [{
+              value: true,
+              label: 'On',
+            }, {
+              value: false,
+              label: 'Off',
+            }],
+            defaultValue: true,
+            show: (data) => {
+              return [29].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
           splitDataset: {
             type: 'boolean',
             component: 'switch',
@@ -920,20 +937,20 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
               value: false,
               label: 'Off',
             }],
-            defaultValue: true,
+            defaultValue: false,
             show: (data) => {
-              return [25].indexOf(data.props.analysisTypeId) >= 0;
+              return [25, 27, 29].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
-          splitPercentageForDecisionTree: {
-            ref: 'props.splitPercentageForDecisionTree',
+          splitPercentage: {
+            ref: 'props.splitPercentage',
             label: 'Treat first N% records as training dataset',
             type: 'number',
             min: 0.01,
             max: 0.99,
             defaultValue: 0.8,
             show: (data) => {
-              return ([25].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true) || ([26].indexOf(data.props.analysisTypeId) >= 0);
+              return ([25, 27, 29].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true) || ([26, 28].indexOf(data.props.analysisTypeId) >= 0);
             },
           },
         },
@@ -980,7 +997,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 1,
                 show: (data) => {
-                  return [0, 6, 8, 9, 15, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 6, 8, 9, 15, 17, 20, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               pointRadius: {
@@ -993,7 +1010,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 6,
                 show: (data) => {
-                  return [0, 6, 8, 9, 15, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 6, 8, 9, 15, 17, 20, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               bubbleSize: {
@@ -1007,6 +1024,58 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 defaultValue: 12,
                 show: (data) => {
                   return [1, 10, 16, 19, 25].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
+              marginTop: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin top',
+                ref: 'props.marginTop',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
+              marginBottom: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin bottom',
+                ref: 'props.marginBottom',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
+              marginRight: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin right',
+                ref: 'props.marginRight',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                },
+              },
+              marginLeft: {
+                type: 'number',
+                component: 'slider',
+                label: 'Margin left',
+                ref: 'props.marginLeft',
+                min: 0,
+                max: 200,
+                step: 1,
+                defaultValue: 10,
+                show: (data) => {
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               defineScreenSize: {
@@ -1064,7 +1133,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               // colorBy: {
@@ -1090,7 +1159,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 type: 'integer',
                 defaultValue: 3,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
+                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25, 29].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
                 },
               },
               colorForSub: {
@@ -1117,7 +1186,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 16, 17, 19, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 16, 17, 19, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
             },
@@ -1157,7 +1226,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: 'bottom',
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 17, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xScale: {
@@ -1174,7 +1243,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xAxisType: {
@@ -1240,7 +1309,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: 'left',
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 17, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               yScale: {
@@ -1257,7 +1326,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 24].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
             },

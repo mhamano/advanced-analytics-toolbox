@@ -1,9 +1,7 @@
 define([
-  '../chart/tree_chart',
-  '../../vendor/d3.min',
   '../util/utils',
   'ng!$q',
-], (tree, d3, utils, $q) => {
+], (utils, $q) => {
   return {
     /**
      * createCube - create HyperCubes
@@ -25,13 +23,10 @@ define([
       const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
 
       const meaLen = layout.props.measures.length;
+      $scope.rowsLabel = ['(Intercept)', (layout.props.measures[1].label != '') ? layout.props.measures[1].label : utils.validateMeasure(layout.props.measures[0]) ]; // Label for dimension values
       let params = `${utils.validateMeasure(layout.props.measures[0])} as mea0, ${utils.validateMeasure(layout.props.measures[1])} as mea1`;
       let meaList = 'mea0 ~ mea1';
-      let dataType = 'SS';
-
-      // Array to replace param names (q$meaX) to a measure label on tree chart
-      $scope.paramNames = ['mea0', 'mea1'];
-      $scope.measureLabels = [layout.props.measures[0].label, layout.props.measures[1].label];
+      let dataType = 'NN';
 
       for (let i = 2; i < meaLen; i++) {
         const mea = utils.validateMeasure(layout.props.measures[i]);
@@ -39,32 +34,21 @@ define([
           const param = `,${mea} as mea${i}`;
           params += param;
           meaList += ` + mea${i}`;
-          dataType += 'S';
+          dataType += 'N';
 
-          $scope.paramNames.push(`mea${i}`);
-          $scope.measureLabels.push(layout.props.measures[i].label);
+          $scope.rowsLabel.push(utils.validateMeasure(layout.props.measures[i]));
         }
       }
 
       // Split dataset into training and test datasets
       const splitData = utils.splitData(true, layout.props.splitPercentage, meaLen);
 
-      // type in predict method for regression tree is 'vector' not 'anova'
-      let predictType = 'class';
-      let MAE = ''; // Calculate mean absolute error for regression tree
-      if (layout.props.rpartMethod === 'anova') {
-        predictType = 'vector';
-        MAE = ',mean(abs(test_data$mea0-pred))'
-      }
-
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(rpart);library(jsonlite);set.seed(10);
-                    q<-lapply(q, function(x){ ifelse(!is.na(as.numeric(x)), as.numeric(x), x) }); ${splitData}
-                    res<-rpart(${meaList}, data=training_data, method="${layout.props.rpartMethod}", control=list(minsplit=${layout.props.minSplit}, minbucket=${layout.props.minBucket}, cp=${layout.props.cp}, maxdepth=${layout.props.maxDepth}));
-                    pred <- predict(res, test_data, type="${predictType}"); conf.mat <- table(pred, test_data$mea0);
-                    json<-toJSON(list(list(attributes(conf.mat)$dimnames[[1]], attributes(conf.mat)$dimnames[[2]]), unname(split(conf.mat, seq(nrow(conf.mat)))), c(length(training_data$mea0), length(test_data$mea0))${MAE})); json;',${params})`,
+            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));lm_summary <- summary(lm_result);
+            pred <- predict(lm_result, test_data, type="response"); pred_result <- ifelse(pred > 0.5,1,0); act_result <- ifelse(test_data$mea0 > 0.5,1,0); conf.mat<-table(pred_result, act_result);
+            json<-toJSON(list(list(attributes(conf.mat)$dimnames[[1]], attributes(conf.mat)$dimnames[[2]]), unname(split(conf.mat, seq(nrow(conf.mat)))), c(length(training_data$mea0), length(test_data$mea0))));json;',${params})`,
           },
         },
         {
@@ -110,19 +94,21 @@ define([
       return null;
     },
     /**
-     * drawChart - draw chart with updated data
-     *
-     * @param {Object} $scope angular $scope
-     *
-     * @return {Object} Promise object
-     */
-    drawChart($scope, app) {
+    * drawChart - draw chart with updated data
+    *
+    * @param {Object} $scope angular $scope
+    *
+    * @return {Object} Promise object
+    */
+    drawChart($scope) {
       const defer = $q.defer();
       const layout = $scope.layout;
+
+      const dimension = utils.validateDimension(layout.props.dimensions[0]);
       const requestPage = [{
         qTop: 0,
         qLeft: 0,
-        qWidth: 6,
+        qWidth: 2,
         qHeight: 1,
       }];
 
@@ -233,22 +219,6 @@ define([
             return sum(arr, fn) / arr.length;
           };
 
-        if (layout.props.rpartMethod === 'anova') {
-          // Set performance measures
-          html += `<h2>Performance measures:</h2>
-                  <table class="simple" style="table-layout:fixed;">
-                    <thead>
-                      <tr>
-                        <th>Measures</th><th>Results</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr><td>Mean absolute error (MAE)</td><td>${result[3]}</td></tr>
-                    </tbody>
-                  </table>
-                `;
-
-        } else {
           // Set performance measures
           html += `<h2>Performance measures:</h2>
                   <table class="simple" style="table-layout:fixed;">
@@ -264,8 +234,6 @@ define([
                     </tbody>
                   </table>
                 `;
-          }
-
 
           // Set number of rows
           html += `<h2>Number of rows:</h2>

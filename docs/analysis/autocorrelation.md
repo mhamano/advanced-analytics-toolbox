@@ -1,5 +1,5 @@
 # Autocorrelation
-Plots a time series along with its acf (autocorrelation function of a time series) and its pacf (partial autocorrelation function of a time series)
+Plots a time series along with its acf (autocorrelation function of a time series) and its pacf (partial autocorrelation function of a time series).
 
 ## Screenshot
 ![autocorrelation screenshot](./images/autocorrelation_example1.png)
