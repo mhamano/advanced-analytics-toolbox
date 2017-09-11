@@ -1,5 +1,5 @@
 # Turkey - Single factor
-Compares the means of all datasets to the mean of every other dataset
+Compares the means of all datasets to the mean of every other dataset.
 
 ## Screenshot
 ![tukey screenshot](./images/tukey_example1.png)

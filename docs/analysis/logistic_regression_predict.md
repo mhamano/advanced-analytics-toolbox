@@ -1,5 +1,5 @@
 # Logistic regression - Evaluate model
-Display the result of model evaluation on logistic regression analysis
+Display the result of model evaluation on logistic regression analysis.
 
 ## Screenshot
   ![logistic regression predict example1](./images/logistic_regression_predict_example2-1.png)

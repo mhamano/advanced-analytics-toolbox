@@ -1,5 +1,5 @@
 # Decision tree - Evaluate model
-Display the result of model evaluation on decision tree
+Display the result of model evaluation on decision tree.
 
 ## Screenshot
   ![decision tree screenshot](./images/decision_tree_predict_example1-1.png)

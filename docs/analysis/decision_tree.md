@@ -1,5 +1,5 @@
 # Decision tree
-Plot classification/regression tree  
+Plot classification/regression tree.
 
 ## Screenshot
 ![decision tree screenshot](./images/decision_tree_example2-1.png)
