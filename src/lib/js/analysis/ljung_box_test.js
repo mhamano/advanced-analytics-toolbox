@@ -29,27 +29,34 @@ define([
         lag = `, lag=${layout.props.lagValue} `
       }
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_ljung_box_test.rda');
+
       // Set first and seasonal differences to acf and pacf
       const dataType = 'N';
-      let expression = null;
+      let defMea1 = null;
       $scope.dataTitle = null;
 
       if (layout.props.differencing === 1) {
-        expression = `R.ScriptEvalExStr('${dataType}','library(jsonlite); res<-Box.test(diff(q$Measure, ${layout.props.seasonalDifferences}), type="Ljung-Box" ${lag}); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
+        defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); res<-Box.test(diff(q$Measure, ${layout.props.seasonalDifferences}), type="Ljung-Box" ${lag}); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
         $scope.dataTitle = `diff(${measure},${layout.props.seasonalDifferences})`;
       } else if (layout.props.differencing === 2) {
-        expression = `R.ScriptEvalExStr('${dataType}','library(jsonlite); res<-Box.test(diff(diff(q$Measure, ${layout.props.seasonalDifferences}), ${layout.props.firstDifferences}), type="Ljung-Box" ${lag}); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
+        defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); res<-Box.test(diff(diff(q$Measure, ${layout.props.seasonalDifferences}), ${layout.props.firstDifferences}), type="Ljung-Box" ${lag}); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
         $scope.dataTitle = `diff(diff(${measure}, ${layout.props.seasonalDifferences}),${layout.props.firstDifferences})`;
       } else {
-        expression = `R.ScriptEvalExStr('${dataType}','library(jsonlite); res<-Box.test(q$Measure, type="Ljung-Box" ${lag}); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
+        defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); res<-Box.test(q$Measure, type="Ljung-Box" ${lag}); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
         $scope.dataTitle = measure;
       }
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
 
       const measures = [
         {
           qDef: {
             qLabel: 'Results',
-            qDef: expression,
+            qDef: defMea1,
           },
         },
         {
@@ -120,6 +127,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           // Set HTML element for chart

@@ -22,28 +22,34 @@ define([
       const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
       const measure = utils.validateMeasure(layout.props.measures[0]);
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_augmented_dickey_fuller_test.rda');
 
       // Set first and seasonal differences to acf and pacf
       const dataType = 'N';
-      let expression = null;
+      let defMea1 = null;
       $scope.dataTitle = null;
 
       if (layout.props.differencing === 1) {
-        expression = `R.ScriptEvalExStr('${dataType}','library(jsonlite); library(tseries); res<-adf.test(diff(q$Measure, ${layout.props.seasonalDifferences})); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
+        defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); library(tseries); res<-adf.test(diff(q$Measure, ${layout.props.seasonalDifferences})); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
         $scope.dataTitle = `diff(${measure},${layout.props.seasonalDifferences})`;
       } else if (layout.props.differencing === 2) {
-        expression = `R.ScriptEvalExStr('${dataType}','library(jsonlite); library(tseries); res<-adf.test(diff(diff(q$Measure, ${layout.props.seasonalDifferences}), ${layout.props.firstDifferences})); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
+        defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); library(tseries); res<-adf.test(diff(diff(q$Measure, ${layout.props.seasonalDifferences}), ${layout.props.firstDifferences})); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
         $scope.dataTitle = `diff(diff(${measure}, ${layout.props.seasonalDifferences}),${layout.props.firstDifferences})`;
       } else {
-        expression = `R.ScriptEvalExStr('${dataType}','library(jsonlite); library(tseries); res<-adf.test(q$Measure); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
+        defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); library(tseries); res<-adf.test(q$Measure); json<-toJSON(list(res$statistic,res$parameter,res$p.value)); json;', ${measure} as Measure)`;
         $scope.dataTitle = measure;
       }
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
 
       const measures = [
         {
           qDef: {
             qLabel: 'Results',
-            qDef: expression,
+            qDef: defMea1,
           },
         },
         {
@@ -114,6 +120,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           // Set HTML element for chart

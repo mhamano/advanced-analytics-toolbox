@@ -40,13 +40,22 @@ define([
         }
       }
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_regression_analysis.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); lm_result <- lm(${meaList});lm_summary <- summary(lm_result);
+      json <- toJSON(list(coef(lm_summary)[,"Estimate"], coef(lm_summary)[,"Std. Error"], coef(lm_summary)[,"t value"], coef(lm_summary)[,"Pr(>|t|)"],
+      as.double(summary(lm_result$residuals)), summary(lm_result)$sigma, summary(lm_result)$df, lm_summary$r.squared, lm_summary$adj.r.squared,
+      summary(lm_result)$fstatistic, extractAIC(lm_result)[2])); json;',${params})`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); lm_result <- lm(${meaList});lm_summary <- summary(lm_result);
-            json <- toJSON(list(coef(lm_summary)[,"Estimate"], coef(lm_summary)[,"Std. Error"], coef(lm_summary)[,"t value"], coef(lm_summary)[,"Pr(>|t|)"],
-            as.double(summary(lm_result$residuals)), summary(lm_result)$sigma, summary(lm_result)$df, lm_summary$r.squared, lm_summary$adj.r.squared,
-            summary(lm_result)$fstatistic, extractAIC(lm_result)[2])); json;',${params})`,
+            qDef: defMea1,
           },
         },
         {
@@ -117,6 +126,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           const estimate = result[0];

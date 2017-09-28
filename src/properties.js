@@ -1,4 +1,7 @@
 define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => {
+  // Control on debug mode
+  const enableDebugMode = true;
+
   const getNumberFormatSimple = () => {
     const app = qlik.currApp(this);
     const defer = $q.defer();
@@ -951,6 +954,34 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             defaultValue: 0.8,
             show: (data) => {
               return ([25, 27, 29].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true) || ([26, 28].indexOf(data.props.analysisTypeId) >= 0);
+            },
+          },
+          // *****
+          // Analysis Options
+          // *****
+          debugMode: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Debug mode',
+            ref: 'props.debugMode',
+            options: [{
+              value: false,
+              label: 'Off',
+            }, {
+              value: true,
+              label: 'On',
+            }],
+            defaultValue: false,
+            show: (data) => {
+              return (enableDebugMode);
+            },
+          },
+          debugModeLink: {
+            label: 'What is debug mode?',
+            component: 'link',
+            url: 'https://github.com/mhamano/advanced-analytics-toolbox/blob/master/docs/debugmode.md',
+            show: (data) => {
+              return (enableDebugMode);
             },
           },
         },

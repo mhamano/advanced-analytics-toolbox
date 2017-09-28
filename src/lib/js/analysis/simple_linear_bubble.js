@@ -28,8 +28,21 @@ define([
           },
         },
       ];
+
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_simple_linear_bubble.rda');
+
       const measure1 = utils.validateMeasure(layout.props.measures[0]);
       const measure2 = utils.validateMeasure(layout.props.measures[1]);
+
+      const defMea1 = `R.ScriptEval('${saveRDataset} lm_result <- lm(q$Measure2~q$Measure1);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${measure1} as Measure1, ${measure2} as Measure2)`;
+      const defMea2 = `R.ScriptEval('lm_result <- lm(q$Measure2~q$Measure1);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${measure1} as Measure1, ${measure2} as Measure2)`;
+      const defMea3 = `R.ScriptEval('lm_result <- lm(q$Measure2~q$Measure1);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${measure1} as Measure1, ${measure2} as Measure2)`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1, defMea2, defMea3]);
+
       const measures = [
         {
           qDef: {
@@ -46,19 +59,19 @@ define([
         {
           qDef: {
             qLabel: 'Fit',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure2~q$Measure1);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${measure1} as Measure1, ${measure2} as Measure2)`,
+            qDef: defMea1,
           },
         },
         {
           qDef: {
             qLabel: 'Lower',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure2~q$Measure1);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${measure1} as Measure1, ${measure2} as Measure2)`,
+            qDef: defMea2,
           },
         },
         {
           qDef: {
             qLabel: 'Upper',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure2~q$Measure1);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${measure1} as Measure1, ${measure2} as Measure2)`,
+            qDef:  defMea3,
           },
         },
       ];
@@ -108,6 +121,9 @@ define([
         ) {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
 
           const elemNum = [];

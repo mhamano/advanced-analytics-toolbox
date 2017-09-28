@@ -38,6 +38,18 @@ define([
         },
       ];
       const measure = utils.validateMeasure(layout.props.measures[0]);
+
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_simple_linear_line.rda');
+
+      const defMea1 = `R.ScriptEval('${saveRDataset} lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${dimension} as Dimension, ${measure} as Measure)`;
+      const defMea2 = `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${dimension} as Dimension, ${measure} as Measure)`;
+      const defMea3 = `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${dimension} as Dimension, ${measure} as Measure)`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1, defMea2, defMea3]);
+
       const measures = [
         {
           qDef: {
@@ -48,19 +60,19 @@ define([
         {
           qDef: {
             qLabel: 'Fit',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${dimension} as Dimension, ${measure} as Measure)`,
+            qDef: defMea1,
           },
         },
         {
           qDef: {
             qLabel: 'Lower',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${dimension} as Dimension, ${measure} as Measure)`,
+            qDef: defMea2,
           },
         },
         {
           qDef: {
             qLabel: 'Upper',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${dimension} as Dimension, ${measure} as Measure)`,
+            qDef: defMea3,
           },
         },
         {
@@ -117,6 +129,9 @@ define([
         ) {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
 
           // Chart mode

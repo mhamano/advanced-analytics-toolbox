@@ -49,11 +49,20 @@ define([
        // Split dataset into training and test datasets
        const splitData = utils.splitData(layout.props.splitDataset, layout.props.splitPercentage, meaLen);
 
+       // Debug mode - set R dataset name to store the q data.
+       utils.displayDebugModeMessage(layout.props.debugMode);
+       const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_logistic_regression_coefplot.rda');
+
+       const defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit")); coe<-summary(lm_result);
+       res<-toJSON(${calcCoef});res;',${params})`;
+
+       // Debug mode - display R Scripts to console
+       utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
        const measures = [
          {
            qDef: {
-             qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit")); coe<-summary(lm_result);
-             res<-toJSON(${calcCoef});res;',${params})`,
+             qDef: defMea1,
            },
          },
          {
@@ -124,6 +133,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 

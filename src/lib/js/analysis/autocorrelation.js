@@ -55,6 +55,17 @@ define([
         }
       });
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_autocorrelation.rda');
+
+      const defMea1 = `R.ScriptEval('${saveRDataset} ${expressions.acf}', ${measure} as Measure)`;
+      const defMea2 = `R.ScriptEval('${expressions.pacf}', ${measure} as Measure)`;
+      const defMea3 = `R.ScriptEval('high<-qnorm((1 + 0.95)/2)/sqrt(length(q$Measure));low<-qnorm((1 - 0.95)/2)/sqrt(length(q$Measure));c(high, low)', ${measure} as Measure)`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1, defMea2, defMea3]);
+
       const measures = [
         {
           qDef: {
@@ -63,17 +74,17 @@ define([
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('${expressions.acf}', ${measure} as Measure)`,
+            qDef: defMea1,
           },
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('${expressions.pacf}', ${measure} as Measure)`,
+            qDef: defMea2,
           },
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('high<-qnorm((1 + 0.95)/2)/sqrt(length(q$Measure));low<-qnorm((1 - 0.95)/2)/sqrt(length(q$Measure));c(high, low)', ${measure} as Measure)`,
+            qDef: defMea3,
           },
         },
         {
@@ -130,6 +141,9 @@ define([
         ) {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
 
           const high = dataPages[0].qMatrix[0][4].qNum;

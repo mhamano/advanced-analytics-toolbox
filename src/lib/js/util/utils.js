@@ -3,6 +3,66 @@ define([
 ], (d3, $q) => {
   return {
 
+
+    /**
+     * displayDebugModeMessage - display Debug mode message
+     *
+     * @param  {Boolean} debugMode    debug mode flag
+     * @return {type}           description
+     */
+    displayDebugModeMessage(debugMode) {
+      if (debugMode) {
+        console.log('** Debug mode is ON **');
+      }
+    },
+
+    /**
+     * getDebugSaveDatasetScript - Return R script to store dataset
+     *
+     * @param  {Boolean} debugMode    debug mode flag
+     * @param  {String} RDatasetName R dataset name
+     * @return {String}              R script to store into R dataset
+     */
+    getDebugSaveDatasetScript(debugMode, RDatasetName) {
+      let saveRDataset = '';
+      if (debugMode) {
+        console.log(`** Records passed to R is to be saved into ${RDatasetName}. `);
+        saveRDataset = `save(q,file="~/${RDatasetName}");`;
+      } else {
+      }
+      return saveRDataset;
+    },
+
+
+    /**
+     * displayRScriptsToConsole - Display R Scripts to console
+     *
+     * @param  {Boolean} debugMode    debug mode flag
+     * @param  {Array} scripts   R scripts contained in measures
+     */
+    displayRScriptsToConsole(debugMode, scripts) {
+      if (debugMode) {
+        console.log('** R Scripts for measures:');
+        for(let i = 0; i < scripts.length; i++) {
+          console.log(scripts[i]);
+        }
+      }
+    },
+
+
+    /**
+     * displayReturnedDatasetToConsole - display returned dataset to console
+     *
+     * @param  {Boolean} debugMode    debug mode flag
+     * @param  {Object} dataset   dataset returned from engine
+     */
+    displayReturnedDatasetToConsole(debugMode, dataset) {
+      if (debugMode) {
+        console.log('** Recieved data from engine:')
+        console.log(dataset);
+      }
+    },
+
     /**
      * pageExtensionData - Iterate through all datapages of hypercube
      *
