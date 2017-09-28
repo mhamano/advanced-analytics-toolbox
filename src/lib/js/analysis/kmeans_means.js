@@ -24,6 +24,7 @@ define([
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
       const dimensions = [
         {
+          qNullSuppression: true,
           qDef: {
             qFieldDefs: [dimension],
             // qSortCriterias: layout.qHyperCubeDef.qDimensions[0].qDef.qSortCriterias

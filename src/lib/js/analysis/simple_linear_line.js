@@ -24,6 +24,7 @@ define([
 
       const dimensions = [
         {
+          qNullSuppression: true,
           qDef: {
             qFieldDefs: [dimension],
             qSortCriterias: [{

@@ -20,7 +20,12 @@ define([
 
       // Set definitions for dimensions and measures
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
 
       // Set definitions for dimensions and measures
       const params = `${utils.validateMeasure(layout.props.measures[0])} as mea0, ${utils.validateDimension(layout.props.dimensions[1])} as dim1`;

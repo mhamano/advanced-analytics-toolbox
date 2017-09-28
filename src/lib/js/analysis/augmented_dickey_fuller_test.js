@@ -19,7 +19,13 @@ define([
 
       // Set definitions for dimensions and measures
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
+
       const measure = utils.validateMeasure(layout.props.measures[0]);
 
       // Debug mode - set R dataset name to store the q data.

@@ -24,7 +24,7 @@ define([
 
       // Set definitions for dimensions and measures
       const dimensions = [{
-        qNullSuppression: false,
+        qNullSuppression: true,
         qDef: {
           qFieldDefs: [dimension]
         },
