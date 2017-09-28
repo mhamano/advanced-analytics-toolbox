@@ -7,6 +7,7 @@ The following R packages need to be installed for this extension.
  * tm
  * dplyr
  * SnowballC
+ * cluster
  * rpart
  * d3r
  * partykit
