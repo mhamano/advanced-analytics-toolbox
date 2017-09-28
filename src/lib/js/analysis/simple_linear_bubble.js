@@ -112,7 +112,7 @@ define([
         qHeight: 1500,
       }];
 
-      $scope.backendApi.getData(requestPage).then((dataPages) => {
+      utils.pageExtensionData($scope, (dataPages) => {
         const measureInfo = $scope.layout.qHyperCube.qMeasureInfo;
 
         // Display error when all measures' grand total return NaN.
@@ -123,7 +123,7 @@ define([
           utils.displayConnectionError($scope.extId);
         } else {
           // Debug mode - display returned dataset to console
-          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages);
 
           const palette = utils.getDefaultPaletteColor();
 
@@ -135,7 +135,7 @@ define([
           const mea4 = [];
           const mea5 = [];
 
-          const datasets = dataPages[0].qMatrix.map((value) => {
+          const datasets = dataPages.map((value) => {
             return {
               elemNum: value[0].qElemNumber,
               dim1: value[0].qText,
