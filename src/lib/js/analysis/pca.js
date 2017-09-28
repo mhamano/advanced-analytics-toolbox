@@ -119,7 +119,7 @@ define([
           const rotation = result[1];
 
           // Table header
-          let header = '<table border="1"><thead><tr><th></th>';
+          let header = '<table class="simple"><thead><tr><th></th>';
           for(let i = 0; i < importance[0].length; i++) {
             header += `<th>PC${i + 1}</th>`;
           }
