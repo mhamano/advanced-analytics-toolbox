@@ -33,9 +33,9 @@ define([
       utils.displayDebugModeMessage(layout.props.debugMode);
       const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_timeseries_decomposition.rda');
 
-      const defMea1 = `R.ScriptEval('${saveRDataset} library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data)$trend);', ${measure} as Measure)`;
-      const defMea2 = `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data)$seasonal);', ${measure} as Measure)`;
-      const defMea3 = `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data)$random);', ${measure} as Measure)`
+      const defMea1 = `R.ScriptEval('${saveRDataset} library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data, type="${layout.props.seasonal}")$trend);', ${measure} as Measure)`;
+      const defMea2 = `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data, type="${layout.props.seasonal}")$seasonal);', ${measure} as Measure)`;
+      const defMea3 = `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data, type="${layout.props.seasonal}")$random);', ${measure} as Measure)`
 
       // Debug mode - display R Scripts to console
       utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1, defMea2, defMea3]);
