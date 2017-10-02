@@ -412,8 +412,34 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             }],
             defaultValue: false,
             show: (data) => {
-              return [1].indexOf(data.props.analysisTypeId) >= 0;
+              return [0].indexOf(data.props.analysisTypeId) >= 0;
             },
+          },
+          extendLine: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Extend line',
+            ref: 'props.extendLine',
+            options: [{
+              value: false,
+              label: 'Off',
+            }, {
+              value: true,
+              label: 'On',
+            }],
+            defaultValue: false,
+            show: (data) => {
+              return [0].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
+          extendDurations: {
+            ref: 'props.extendDurations',
+            label: 'Extend durations',
+            type: 'string',
+            show: (data) => {
+              return [0].indexOf(data.props.analysisTypeId) >= 0 && data.props.extendLine === true;
+            },
+            defaultValue: 12,
           },
           interval: {
             type: 'string',
