@@ -40,6 +40,14 @@ define([
       ];
       const measure = utils.validateMeasure(layout.props.measures[0]);
 
+      let sendJson = `json<-toJSON(list(res[,1], res[,2], res[,3], coef(summary(lm_result))[,"Estimate"]));`;
+
+      if (layout.props.extendLine) {
+        sendJson = `by<-q$Dimension[length(q$Dimension)]-q$Dimension[length(q$Dimension)-1]; from<-q$Dimension[length(q$Dimension)]+by;
+                    data<-seq(from=from, by=by, length.out=${layout.props.extendDurations}); newdata <-data.frame(Dimension=data); pred_res<-predict(lm_result,newdata, interval="${layout.props.interval}", level=${layout.props.confidenceLevel});
+                    json<-toJSON(list(res[,1], res[,2], res[,3], coef(summary(lm_result))[,"Estimate"], pred_res[,1], pred_res[,2], pred_res[,3]));`;
+      }
+
       // Debug mode - set R dataset name to store the q data.
       utils.displayDebugModeMessage(layout.props.debugMode);
       const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_simple_linear_line.rda');
@@ -136,6 +144,9 @@ define([
           const lower = result[1];
           const upper = result[2];
           const coef = result[3];
+          const predMean = result[4];
+          const predLower = result[5];
+          const predUpper = result[6];
 
           // Get equation
           let equation = `y=${coef[1]}x`;
@@ -156,6 +167,17 @@ define([
               dim1.push(value[0].qText);
               mea1.push(value[1].qNum);
             });
+
+            // Extend lines
+            if (layout.props.extendLine) {
+              $.merge(mean, predMean);
+              $.merge(lower, predLower);
+              $.merge(upper, predUpper);
+              for (let i = 0; i < layout.props.extendDurations; i++) {
+                dim1.push(`+${i + 1}`); // Forecast period is displayed as +1, +2, +3...
+                mea1.push('');
+              }
+            }
 
             const chartData = [
               {
@@ -250,6 +272,21 @@ define([
                 locale.format(numberFormat)(upper[key]).replace(/G/, 'B'),
               ]);
             });
+
+            // Extend lines
+            if (layout.props.extendLine) {
+              for (let i = 0; i < layout.props.forecastingPeriods; i++) {
+                dataset.push([
+                  '',
+                  `+${i + 1}`, // Forecast period is displayed as +1, +2, +3...
+                  '',
+                  locale.format(numberFormat)(predMean[i]).replace(/G/, 'B'),
+                  locale.format(numberFormat)(predLower[i]).replace(/G/, 'B'),
+                  locale.format(numberFormat)(predUpper[i]).replace(/G/, 'B'),
+                ]);
+              }
+            }
+
             const html = `
               <table id="aat-table-${$scope.extId}" class="display">
                 <thead>
