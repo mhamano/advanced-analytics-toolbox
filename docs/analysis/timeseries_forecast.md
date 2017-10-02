@@ -46,3 +46,12 @@ Displays time series forecasts with ARIMA modeling on a line chart.
   4. Select [YearMonth] for a dimension and Sum([Passengers]) for a measure
   5. You find that the observed data with forecast data.
   ![arima forecast screenshot](./images/arima_forecast_example1.png)
+
+## Example2 - Sales forecast
+  1. Download the following sample file.
+    * Sales data ( [Download file](./data/sales.xlsx))  
+  2. Load the downloaded file into a new Qlik Sense app using data manager by selecting [Add data] option. (Derived master calendar fields are automatically created on Date field.)
+  3. Place [Advanced Analytics Toolbox] extension on a sheet and select [Simple linear regression analysis] > [ARIMA forecast] for [Analysis Type].
+  4. Select [YearMonth] for a dimension and Sum([Passengers]) for a measure.
+  5. The following chart is displayed.
+  ![arima forecast screenshot](./images/arima_forecast_example2.png)
