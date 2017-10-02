@@ -44,12 +44,11 @@ define([
       utils.displayDebugModeMessage(layout.props.debugMode);
       const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_simple_linear_line.rda');
 
-      const defMea1 = `R.ScriptEval('${saveRDataset} lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${dimension} as Dimension, ${measure} as Measure)`;
-      const defMea2 = `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${dimension} as Dimension, ${measure} as Measure)`;
-      const defMea3 = `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${dimension} as Dimension, ${measure} as Measure)`;
+      const defMea1 = `R.ScriptEvalExStr('NN','${saveRDataset} library(jsonlite); lm_result <- lm(Measure~Dimension, data=q);res<-predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel});
+      ${sendJson} json;',${dimension} as Dimension, ${measure} as Measure)`;
 
       // Debug mode - display R Scripts to console
-      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1, defMea2, defMea3]);
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
 
       const measures = [
         {
@@ -66,14 +65,14 @@ define([
         },
         {
           qDef: {
-            qLabel: 'Lower',
-            qDef: defMea2,
+            qLabel: '-',
+            qDef: '', // Dummy
           },
         },
         {
           qDef: {
-            qLabel: 'Upper',
-            qDef: defMea3,
+            qLabel: '-',
+            qDef: '', // Dummy
           },
         },
         {
@@ -124,10 +123,7 @@ define([
         const measureInfo = $scope.layout.qHyperCube.qMeasureInfo;
 
         // Display error when all measures' grand total return NaN.
-        if (isNaN(measureInfo[1].qMin) && isNaN(measureInfo[1].qMax)
-          && isNaN(measureInfo[2].qMin) && isNaN(measureInfo[2].qMax)
-          && isNaN(measureInfo[3].qMin) && isNaN(measureInfo[3].qMax)
-        ) {
+        if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
           // Debug mode - display returned dataset to console
@@ -135,22 +131,30 @@ define([
 
           const palette = utils.getDefaultPaletteColor();
 
+          const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
+          const mean = result[0];
+          const lower = result[1];
+          const upper = result[2];
+          const coef = result[3];
+
+          // Get equation
+          let equation = `y=${coef[1]}x`;
+          if (coef[0] < 0) {
+            equation += `${coef[0]}`;
+          } else {
+            equation += `+${coef[0]}`;
+          }
+
           // Chart mode
           if (typeof $scope.layout.props.displayTable == 'undefined' || $scope.layout.props.displayTable == false) {
             const elemNum = [];
             const dim1 = []; // Dimension
             const mea1 = [];
-            const mea2 = [];
-            const mea3 = [];
-            const mea4 = [];
 
             $.each(dataPages[0].qMatrix, (key, value) => {
               elemNum.push(value[0].qElemNumber);
               dim1.push(value[0].qText);
               mea1.push(value[1].qNum);
-              mea2.push(value[2].qNum);
-              mea3.push(value[3].qNum);
-              mea4.push(value[4].qNum);
             });
 
             const chartData = [
@@ -172,7 +176,7 @@ define([
               },
               {
                 x: dim1,
-                y: mea2,
+                y: mean,
                 name: 'Fit',
                 line: {
                   color: `rgba(${palette[layout.props.colorForSub]},1)`,
@@ -180,7 +184,7 @@ define([
               },
               {
                 x: dim1,
-                y: mea3,
+                y: lower,
                 name: 'Lower',
                 fill: 'tonexty',
                 fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
@@ -189,7 +193,7 @@ define([
               },
               {
                 x: dim1,
-                y: mea4,
+                y: upper,
                 name: 'Upper',
                 fill: 'tonexty',
                 fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
@@ -198,9 +202,33 @@ define([
               },
             ];
 
+            // Add equation as an annotation
+            const position = Math.floor(dim1.length/2);
+            const annotationPosX = dim1[position];
+            const annotationPosY = mean[position];
+            const customOptions = {
+              annotations: [],
+            };
+
+            if (layout.props.displayFormula) {
+              customOptions.annotations.push(
+                {
+                  x: annotationPosX,
+                  y: annotationPosY,
+                  text: equation,
+                  xref: 'x',
+                  yref: 'y',
+                  ax: -30,
+                  ay: -40,
+                  showarrow: true,
+                  arrowhead: 3,
+                }
+              );
+            }
+
             // Display ARIMA parameters
             $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" style="width:100%;height:100%;"></div>`);
-            const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, null);
+            const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, customOptions);
             lineChart.setEvents(chart, $scope, app);
 
           // Table display mode
@@ -217,9 +245,9 @@ define([
                 value[0].qElemNumber,
                 value[0].qText,
                 locale.format(numberFormat)(value[1].qNum).replace(/G/, 'B'),
-                locale.format(numberFormat)(value[2].qNum).replace(/G/, 'B'),
-                locale.format(numberFormat)(value[3].qNum).replace(/G/, 'B'),
-                locale.format(numberFormat)(value[4].qNum).replace(/G/, 'B'),
+                locale.format(numberFormat)(mean[key]).replace(/G/, 'B'),
+                locale.format(numberFormat)(lower[key]).replace(/G/, 'B'),
+                locale.format(numberFormat)(upper[key]).replace(/G/, 'B'),
               ]);
             });
             const html = `
