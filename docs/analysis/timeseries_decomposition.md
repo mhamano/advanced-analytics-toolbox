@@ -22,6 +22,7 @@ Decomposes a time series into seasonal, trend and random components.
 ## Options
 * Frequency - number of observations per cycle (ex: a year = 12, week = 7, hours = 24, etc).
 * Display in 4 charts - when this is on, observed, trend, seasonal and random data are displayed in separated 4 charts.
+* Seasonal - Able to select additive or multiplicative seasonal
 
 ## Example1 - Monthly Airline Passenger Numbers 1949-1960
   1. Download the following sample file.

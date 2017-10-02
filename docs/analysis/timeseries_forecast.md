@@ -25,6 +25,7 @@ Displays time series forecasts with ARIMA modeling on a line chart.
     * Measure: A field with numeric values
 
 ## Options
+* Table display mode - When enabled, the output is displayed in a table format instead of a line chart
 * Confidence Level - Tolerance/confidence level.
 * Forecasting period
 * Display ARIMA Parameter - Display the order of ARIMA model ARIMA(p,d,q)(P,D,Q)[m] where m is the period of seasonality.

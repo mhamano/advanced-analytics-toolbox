@@ -6,6 +6,7 @@ Plots a simple linear regression line on a line chart.
 
 ## Prerequisite R packages
  * forecast
+ * jsonlite
 
 ## Used R command
  * [lm](https://www.rdocumentation.org/packages/stats/versions/3.4.0/topics/lm)
@@ -20,6 +21,9 @@ Plots a simple linear regression line on a line chart.
     * Measure: A field with numeric values.
 
 ## Options
+ * Table display mode - When enabled, the output is displayed in a table format instead of a line chart.
+ * Display formula - When enabled, formula for the linear regression line is displayed.
+ * Extend line - When enabled, line is extended for forecasting. The extension length can be adjusted by the [Extend durations] setting.
  * Confidence level - Tolerance/confidence level.
  * Interval - 'confidence' or 'predict' for type of interval calculation.
 
