@@ -19,10 +19,14 @@ define([
       // Display loader
       // utils.displayLoader($scope.extId);
 
-      const dimension = utils.validateDimension(layout.props.dimensions[0]);
-
       // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimension = utils.validateDimension(layout.props.dimensions[0]);
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
 
       const meaLen = layout.props.measures.length;
       let params = `${utils.validateMeasure(layout.props.measures[0])} as mea0, ${utils.validateMeasure(layout.props.measures[1])} as mea1`;
@@ -57,14 +61,23 @@ define([
         MAE = ',mean(abs(test_data$mea0-pred))'
       }
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_decision_tree_predict.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(rpart);library(jsonlite);set.seed(10);
+              q<-lapply(q, function(x){ ifelse(!is.na(as.numeric(x)), as.numeric(x), x) }); ${splitData}
+              res<-rpart(${meaList}, data=training_data, method="${layout.props.rpartMethod}", control=list(minsplit=${layout.props.minSplit}, minbucket=${layout.props.minBucket}, cp=${layout.props.cp}, maxdepth=${layout.props.maxDepth}));
+              pred <- predict(res, test_data, type="${predictType}"); conf.mat <- table(pred, test_data$mea0);
+              json<-toJSON(list(list(attributes(conf.mat)$dimnames[[1]], attributes(conf.mat)$dimnames[[2]]), unname(split(conf.mat, seq(nrow(conf.mat)))), c(length(training_data$mea0), length(test_data$mea0))${MAE})); json;',${params})`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(rpart);library(jsonlite);set.seed(10);
-                    q<-lapply(q, function(x){ ifelse(!is.na(as.numeric(x)), as.numeric(x), x) }); ${splitData}
-                    res<-rpart(${meaList}, data=training_data, method="${layout.props.rpartMethod}", control=list(minsplit=${layout.props.minSplit}, minbucket=${layout.props.minBucket}, cp=${layout.props.cp}, maxdepth=${layout.props.maxDepth}));
-                    pred <- predict(res, test_data, type="${predictType}"); conf.mat <- table(pred, test_data$mea0);
-                    json<-toJSON(list(list(attributes(conf.mat)$dimnames[[1]], attributes(conf.mat)$dimnames[[2]]), unname(split(conf.mat, seq(nrow(conf.mat)))), c(length(training_data$mea0), length(test_data$mea0))${MAE})); json;',${params})`,
+            qDef: defMea1,
           },
         },
         {
@@ -131,6 +144,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           const rowLabels = result[0][0];

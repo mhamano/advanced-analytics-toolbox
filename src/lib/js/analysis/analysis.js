@@ -157,7 +157,7 @@ define([], () => {
         file: 'timeseries_forecast',
         minDims: 1,
         minMeas: 1,
-        sortId: 5,
+        sortId: 6,
         setCustomButtonLabel: false,
       },
       {
@@ -427,6 +427,16 @@ define([], () => {
         minMeas: 2,
         sortId: 5,
         allowAddMea: true,
+      },
+      {
+        id: 30,
+        category: 3,
+        name: 'Holt-Winters',
+        file: 'holt_winters',
+        minDims: 1,
+        minMeas: 1,
+        sortId: 5,
+        setCustomButtonLabel: false,
       },
     ].sort((a, b) => {
       return a.sortId - b.sortId;

@@ -17,7 +17,15 @@ define([
       // Display loader
       // utils.displayLoader($scope.extId);
 
+      // Set definitions for dimensions and measures
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
+
       $scope.dataTitle = '';
       let params = '';
 
@@ -40,15 +48,23 @@ define([
           break;
       }
 
-      // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
       const measure1 = utils.validateMeasure(layout.props.measures[0]);
       const measure2 = utils.validateMeasure(layout.props.measures[1]);
+
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_t_test.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('NN','${saveRDataset} library(jsonlite); res<-t.test(q$SampleA, q$SampleB, conf.level=${layout.props.confidenceLevel}${params}); json<-toJSON(list(as.double(res$statistic),as.double(res$parameter),res$p.value,res$conf.int[1],res$conf.int[2],as.double(res$estimate))); json;', ${measure1} as SampleA, ${measure2} as SampleB)`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
             qLabel: 'Results',
-            qDef: `R.ScriptEvalExStr('NN','library(jsonlite); res<-t.test(q$SampleA, q$SampleB, conf.level=${layout.props.confidenceLevel}${params}); json<-toJSON(list(as.double(res$statistic),as.double(res$parameter),res$p.value,res$conf.int[1],res$conf.int[2],as.double(res$estimate))); json;', ${measure1} as SampleA, ${measure2} as SampleB)`,
+            qDef: defMea1,
           },
         },
         {
@@ -119,6 +135,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           const t = result[0][0];

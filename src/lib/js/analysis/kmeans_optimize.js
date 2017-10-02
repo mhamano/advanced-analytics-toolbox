@@ -24,6 +24,7 @@ define([
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
       const dimensions = [
         {
+          qNullSuppression: true,
           qDef: {
             qFieldDefs: [dimension],
             // qSortCriterias: layout.qHyperCubeDef.qDimensions[0].qDef.qSortCriterias
@@ -50,14 +51,22 @@ define([
         data = `scale(cbind(${meaList}))`;
       }
 
-      let measure = '';
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_kmeans_optimize.rda');
+
+      let defMea1 = '';
       if (typeof layout.props.optimizationMethod == 'undefined' || layout.props.optimizationMethod == 'gap') {
-        measure = `R.ScriptEvalExStr('${dataType}','library(cluster); library(jsonlite); set.seed(1); gap_kmeans<-clusGap(${data}, FUNcluster=kmeans, K.max=${layout.props.clusterMax}, B=${layout.props.bootstrap}); json<-toJSON(gap_kmeans$Tab); json;', ${params})`
+        defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(cluster); library(jsonlite); set.seed(1); gap_kmeans<-clusGap(${data}, FUNcluster=kmeans, K.max=${layout.props.clusterMax}, B=${layout.props.bootstrap}); json<-toJSON(gap_kmeans$Tab); json;', ${params})`
       }
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
-            qDef: measure,
+            qDef: defMea1,
           },
         },
         {
@@ -128,6 +137,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
           const palette = utils.getOneHundredColors();
 

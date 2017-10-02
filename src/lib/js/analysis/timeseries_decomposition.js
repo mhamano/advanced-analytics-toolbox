@@ -18,11 +18,28 @@ define([
       // Display loader
       // utils.displayLoader($scope.extId);
 
-      const dimension = utils.validateDimension(layout.props.dimensions[0]);
-
       // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimension = utils.validateDimension(layout.props.dimensions[0]);
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
+
       const measure = utils.validateMeasure(layout.props.measures[0]);
+
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_timeseries_decomposition.rda');
+
+      const defMea1 = `R.ScriptEval('${saveRDataset} library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data, type="${layout.props.seasonal}")$trend);', ${measure} as Measure)`;
+      const defMea2 = `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data, type="${layout.props.seasonal}")$seasonal);', ${measure} as Measure)`;
+      const defMea3 = `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data, type="${layout.props.seasonal}")$random);', ${measure} as Measure)`
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1, defMea2, defMea3]);
+
       const measures = [
         {
           qDef: {
@@ -31,17 +48,17 @@ define([
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data)$trend);', ${measure} as Measure)`,
+            qDef: defMea1,
           },
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data)$seasonal);', ${measure} as Measure)`,
+            qDef: defMea2,
           },
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('library(dplyr);data<-ts(q$Measure,frequency=${layout.props.frequency});(decompose(data)$random);', ${measure} as Measure)`,
+            qDef: defMea3,
           },
         },
         {
@@ -98,6 +115,9 @@ define([
         ) {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           let elemNum;
           let dim;
           let mea;

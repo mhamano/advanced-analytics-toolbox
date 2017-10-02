@@ -24,6 +24,7 @@ define([
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
       const dimensions = [
         {
+          qNullSuppression: true,
           qDef: {
             qFieldDefs: [dimension],
             // qSortCriterias: layout.qHyperCubeDef.qDimensions[0].qDef.qSortCriterias
@@ -51,6 +52,16 @@ define([
       const measure1 = utils.validateMeasure(layout.props.measures[0]);
       const measure2 = utils.validateMeasure(layout.props.measures[1]);
       const measure3 = utils.validateMeasure(layout.props.measures[2]);
+
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_kmeans_3d.rda');
+
+      const defMea1 = `R.ScriptEval('${saveRDataset} set.seed(1);kmeans(${data},${numberOfClusters})$cluster', ${params})`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
@@ -72,7 +83,7 @@ define([
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('set.seed(1);kmeans(${data},${numberOfClusters})$cluster', ${params})`,
+            qDef: defMea1,
           },
         },
         {
@@ -125,6 +136,9 @@ define([
         if (isNaN(measureInfo[3].qMin) && isNaN(measureInfo[3].qMax)) {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages);
+
           const palette = utils.getOneHundredColors();
 
           // Create containers for storing bubble data

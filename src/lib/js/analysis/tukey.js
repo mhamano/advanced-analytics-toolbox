@@ -20,7 +20,12 @@ define([
 
       // Set definitions for dimensions and measures
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
 
       // Set definitions for dimensions and measures
       const params = `${utils.validateMeasure(layout.props.measures[0])} as mea0, ${utils.validateDimension(layout.props.dimensions[1])} as dim1`;
@@ -30,11 +35,20 @@ define([
       // Set first and seasonal differences to acf and pacf
       const dataType = 'NS';
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_tukey.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); res<-TukeyHSD(aov(${meaList}), conf.level=${layout.props.confidenceLevel}); json<-toJSON(list(rownames(res[[1]]), res[[1]])); json;', ${params})`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
             qLabel: 'Results',
-            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); res<-TukeyHSD(aov(${meaList}), conf.level=${layout.props.confidenceLevel}); json<-toJSON(list(rownames(res[[1]]), res[[1]])); json;', ${params})`,
+            qDef: defMea1,
           },
         },
         {
@@ -105,6 +119,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           const rownames = result[0];

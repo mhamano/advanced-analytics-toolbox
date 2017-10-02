@@ -23,7 +23,12 @@ define([
       const dimension = utils.validateDimension(layout.props.dimensions[0]);
 
       // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
       const measure = utils.validateMeasure(layout.props.measures[0]);
 
       let expression = '';
@@ -39,6 +44,17 @@ define([
         frequency = `,frequency=${layout.props.frequency}`;
       }
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_timeseries_forecast.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('N', '${saveRDataset} library(jsonlite);library(dplyr);library(forecast);data<-ts(na.omit(q$Measure) ${frequency});${expression}
+      res<-forecast(fit, level=${layout.props.confidenceLevel}, h=${layout.props.forecastingPeriods});
+      json<-toJSON(list(as.double(res$mean),as.double(res$upper),as.double(res$lower),arimaorder(fit))); json;', ${measure} as Measure)`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
@@ -47,9 +63,7 @@ define([
         },
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('N', 'library(jsonlite);library(dplyr);library(forecast);data<-ts(na.omit(q$Measure) ${frequency});${expression}
-            res<-forecast(fit, level=${layout.props.confidenceLevel}, h=${layout.props.forecastingPeriods});
-            json<-toJSON(list(as.double(res$mean),as.double(res$upper),as.double(res$lower),arimaorder(fit))); json;', ${measure} as Measure)`,
+            qDef: defMea1,
           },
         },
         {
@@ -112,6 +126,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
 
           const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);

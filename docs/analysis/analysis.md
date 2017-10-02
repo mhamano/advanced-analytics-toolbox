@@ -30,6 +30,7 @@
   * [Ljung-Box Test](ljung_box_test.md) - Computes the Ljung-Box test statistic to examine the independence in a given time series.
   * [Decomposing time series](timeseries_decomposition.md) - Decomposes a time series into seasonal, trend and random components.
   * [Augmented Dickey-Fuller Test](augmented_dickey_fuller_test.md) - Performs test if a unit root is present in a time series dataset.
+  * [Holt-Winters](holt_winters.md) - Computes Holt-Winters Filtering of a given time series.
   * [ARIMA forecast](timeseries_forecast.md) - Displays time series forecasts with ARIMA modeling on a line chart.
 
 * Clustering

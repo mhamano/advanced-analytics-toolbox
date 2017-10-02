@@ -22,6 +22,7 @@ define([
 
       const dimensions = [
         {
+          qNullSuppression: true,
           qDef: {
             qFieldDefs: [dimension],
             qSortCriterias: [{
@@ -52,6 +53,17 @@ define([
         }
       }
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_regression_analysis_line_chart.rda');
+
+      const defMea1 = `R.ScriptEval('${saveRDataset} lm_result <- lm(${meaList});predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${params})`;
+      const defMea2 = `R.ScriptEval('lm_result <- lm(${meaList});predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${params})`;
+      const defMea3 = `R.ScriptEval('lm_result <- lm(${meaList});predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${params})`
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1, defMea2, defMea3]);
+
       const measure = utils.validateMeasure(layout.props.measures[0]);
       const measures = [
         {
@@ -61,17 +73,17 @@ define([
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('lm_result <- lm(${meaList});predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${params})`,
+            qDef: defMea1,
           },
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('lm_result <- lm(${meaList});predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${params})`,
+            qDef: defMea2,
           },
         },
         {
           qDef: {
-            qDef: `R.ScriptEval('lm_result <- lm(${meaList});predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${params})`,
+            qDef: defMea3,
           },
         },
         {
@@ -127,6 +139,9 @@ define([
         ) {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
 
           const elemNum = [];

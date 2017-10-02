@@ -17,10 +17,14 @@ define([
       // Display loader
       // utils.displayLoader($scope.extId);
 
-      const dimension = utils.validateDimension(layout.props.dimensions[0]);
-
       // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimension = utils.validateDimension(layout.props.dimensions[0]);
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
 
       const meaLen = layout.props.measures.length;
       $scope.rowsLabel = ['(Intercept)', (layout.props.measures[1].label != '') ? layout.props.measures[1].label : utils.validateMeasure(layout.props.measures[0]) ]; // Label for dimension values
@@ -43,12 +47,21 @@ define([
       // Split dataset into training and test datasets
       const splitData = utils.splitData(true, layout.props.splitPercentage, meaLen);
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_logistic_regression_predict.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));lm_summary <- summary(lm_result);
+      pred <- predict(lm_result, test_data, type="response"); pred_result <- ifelse(pred > 0.5,1,0); act_result <- ifelse(test_data$mea0 > 0.5,1,0); conf.mat<-table(pred_result, act_result);
+      json<-toJSON(list(list(attributes(conf.mat)$dimnames[[1]], attributes(conf.mat)$dimnames[[2]]), unname(split(conf.mat, seq(nrow(conf.mat)))), c(length(training_data$mea0), length(test_data$mea0))));json;',${params})`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));lm_summary <- summary(lm_result);
-            pred <- predict(lm_result, test_data, type="response"); pred_result <- ifelse(pred > 0.5,1,0); act_result <- ifelse(test_data$mea0 > 0.5,1,0); conf.mat<-table(pred_result, act_result);
-            json<-toJSON(list(list(attributes(conf.mat)$dimnames[[1]], attributes(conf.mat)$dimnames[[2]]), unname(split(conf.mat, seq(nrow(conf.mat)))), c(length(training_data$mea0), length(test_data$mea0))));json;',${params})`,
+            qDef: defMea1,
           },
         },
         {
@@ -117,6 +130,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           const rowLabels = result[0][0];

@@ -24,6 +24,7 @@ define([
 
       const dimensions = [
         {
+          qNullSuppression: true,
           qDef: {
             qFieldDefs: [dimension],
             qSortCriterias: [{
@@ -38,6 +39,25 @@ define([
         },
       ];
       const measure = utils.validateMeasure(layout.props.measures[0]);
+
+      let sendJson = `json<-toJSON(list(res[,1], res[,2], res[,3], coef(summary(lm_result))[,"Estimate"]));`;
+
+      if (layout.props.extendLine) {
+        sendJson = `by<-q$Dimension[length(q$Dimension)]-q$Dimension[length(q$Dimension)-1]; from<-q$Dimension[length(q$Dimension)]+by;
+                    data<-seq(from=from, by=by, length.out=${layout.props.extendDurations}); newdata <-data.frame(Dimension=data); pred_res<-predict(lm_result,newdata, interval="${layout.props.interval}", level=${layout.props.confidenceLevel});
+                    json<-toJSON(list(res[,1], res[,2], res[,3], coef(summary(lm_result))[,"Estimate"], pred_res[,1], pred_res[,2], pred_res[,3]));`;
+      }
+
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_simple_linear_line.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('NN','${saveRDataset} library(jsonlite); lm_result <- lm(Measure~Dimension, data=q);res<-predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel});
+      ${sendJson} json;',${dimension} as Dimension, ${measure} as Measure)`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
@@ -48,19 +68,19 @@ define([
         {
           qDef: {
             qLabel: 'Fit',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,1]',${dimension} as Dimension, ${measure} as Measure)`,
+            qDef: defMea1,
           },
         },
         {
           qDef: {
-            qLabel: 'Lower',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,2]',${dimension} as Dimension, ${measure} as Measure)`,
+            qLabel: '-',
+            qDef: '', // Dummy
           },
         },
         {
           qDef: {
-            qLabel: 'Upper',
-            qDef: `R.ScriptEval('lm_result <- lm(q$Measure~q$Dimension);predict(lm_result, interval="${layout.props.interval}", level=${layout.props.confidenceLevel})[,3]',${dimension} as Dimension, ${measure} as Measure)`,
+            qLabel: '-',
+            qDef: '', // Dummy
           },
         },
         {
@@ -111,31 +131,53 @@ define([
         const measureInfo = $scope.layout.qHyperCube.qMeasureInfo;
 
         // Display error when all measures' grand total return NaN.
-        if (isNaN(measureInfo[1].qMin) && isNaN(measureInfo[1].qMax)
-          && isNaN(measureInfo[2].qMin) && isNaN(measureInfo[2].qMax)
-          && isNaN(measureInfo[3].qMin) && isNaN(measureInfo[3].qMax)
-        ) {
+        if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
+
+          const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
+          const mean = result[0];
+          const lower = result[1];
+          const upper = result[2];
+          const coef = result[3];
+          const predMean = result[4];
+          const predLower = result[5];
+          const predUpper = result[6];
+
+          // Get equation
+          let equation = `y=${coef[1]}x`;
+          if (coef[0] < 0) {
+            equation += `${coef[0]}`;
+          } else {
+            equation += `+${coef[0]}`;
+          }
 
           // Chart mode
           if (typeof $scope.layout.props.displayTable == 'undefined' || $scope.layout.props.displayTable == false) {
             const elemNum = [];
             const dim1 = []; // Dimension
             const mea1 = [];
-            const mea2 = [];
-            const mea3 = [];
-            const mea4 = [];
 
             $.each(dataPages[0].qMatrix, (key, value) => {
               elemNum.push(value[0].qElemNumber);
               dim1.push(value[0].qText);
               mea1.push(value[1].qNum);
-              mea2.push(value[2].qNum);
-              mea3.push(value[3].qNum);
-              mea4.push(value[4].qNum);
             });
+
+            // Extend lines
+            if (layout.props.extendLine) {
+              $.merge(mean, predMean);
+              $.merge(lower, predLower);
+              $.merge(upper, predUpper);
+              for (let i = 0; i < layout.props.extendDurations; i++) {
+                dim1.push(`+${i + 1}`); // Forecast period is displayed as +1, +2, +3...
+                mea1.push('');
+              }
+            }
 
             const chartData = [
               {
@@ -156,7 +198,7 @@ define([
               },
               {
                 x: dim1,
-                y: mea2,
+                y: mean,
                 name: 'Fit',
                 line: {
                   color: `rgba(${palette[layout.props.colorForSub]},1)`,
@@ -164,7 +206,7 @@ define([
               },
               {
                 x: dim1,
-                y: mea3,
+                y: lower,
                 name: 'Lower',
                 fill: 'tonexty',
                 fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
@@ -173,7 +215,7 @@ define([
               },
               {
                 x: dim1,
-                y: mea4,
+                y: upper,
                 name: 'Upper',
                 fill: 'tonexty',
                 fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
@@ -182,9 +224,33 @@ define([
               },
             ];
 
+            // Add equation as an annotation
+            const position = Math.floor(dim1.length/2);
+            const annotationPosX = dim1[position];
+            const annotationPosY = mean[position];
+            const customOptions = {
+              annotations: [],
+            };
+
+            if (layout.props.displayFormula) {
+              customOptions.annotations.push(
+                {
+                  x: annotationPosX,
+                  y: annotationPosY,
+                  text: equation,
+                  xref: 'x',
+                  yref: 'y',
+                  ax: -30,
+                  ay: -40,
+                  showarrow: true,
+                  arrowhead: 3,
+                }
+              );
+            }
+
             // Display ARIMA parameters
             $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" style="width:100%;height:100%;"></div>`);
-            const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, null);
+            const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, customOptions);
             lineChart.setEvents(chart, $scope, app);
 
           // Table display mode
@@ -201,11 +267,26 @@ define([
                 value[0].qElemNumber,
                 value[0].qText,
                 locale.format(numberFormat)(value[1].qNum).replace(/G/, 'B'),
-                locale.format(numberFormat)(value[2].qNum).replace(/G/, 'B'),
-                locale.format(numberFormat)(value[3].qNum).replace(/G/, 'B'),
-                locale.format(numberFormat)(value[4].qNum).replace(/G/, 'B'),
+                locale.format(numberFormat)(mean[key]).replace(/G/, 'B'),
+                locale.format(numberFormat)(lower[key]).replace(/G/, 'B'),
+                locale.format(numberFormat)(upper[key]).replace(/G/, 'B'),
               ]);
             });
+
+            // Extend lines
+            if (layout.props.extendLine) {
+              for (let i = 0; i < layout.props.forecastingPeriods; i++) {
+                dataset.push([
+                  '',
+                  `+${i + 1}`, // Forecast period is displayed as +1, +2, +3...
+                  '',
+                  locale.format(numberFormat)(predMean[i]).replace(/G/, 'B'),
+                  locale.format(numberFormat)(predLower[i]).replace(/G/, 'B'),
+                  locale.format(numberFormat)(predUpper[i]).replace(/G/, 'B'),
+                ]);
+              }
+            }
+
             const html = `
               <table id="aat-table-${$scope.extId}" class="display">
                 <thead>

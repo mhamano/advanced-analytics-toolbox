@@ -1,4 +1,7 @@
 define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => {
+  // Control on debug mode
+  const enableDebugMode = true;
+
   const getNumberFormatSimple = () => {
     const app = qlik.currApp(this);
     const defer = $q.defer();
@@ -389,7 +392,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             }],
             defaultValue: false,
             show: (data) => {
-              return [0, 9].indexOf(data.props.analysisTypeId) >= 0;
+              return [0, 9, 30].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           // *****
@@ -409,8 +412,34 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             }],
             defaultValue: false,
             show: (data) => {
-              return [1].indexOf(data.props.analysisTypeId) >= 0;
+              return [0].indexOf(data.props.analysisTypeId) >= 0;
             },
+          },
+          extendLine: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Extend line',
+            ref: 'props.extendLine',
+            options: [{
+              value: false,
+              label: 'Off',
+            }, {
+              value: true,
+              label: 'On',
+            }],
+            defaultValue: false,
+            show: (data) => {
+              return [0].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
+          extendDurations: {
+            ref: 'props.extendDurations',
+            label: 'Extend durations',
+            type: 'string',
+            show: (data) => {
+              return [0].indexOf(data.props.analysisTypeId) >= 0 && data.props.extendLine === true;
+            },
+            defaultValue: 12,
           },
           interval: {
             type: 'string',
@@ -434,7 +463,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             label: 'Confidence level',
             type: 'string',
             show: (data) => {
-              return [0, 1, 2, 3, 4, 5, 9, 17, 22].indexOf(data.props.analysisTypeId) >= 0;
+              return [0, 1, 2, 3, 4, 5, 9, 17, 22, 30].indexOf(data.props.analysisTypeId) >= 0;
             },
             defaultValue: 0.95,
           },
@@ -443,7 +472,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             label: 'Frequency',
             type: 'integer',
             show: (data) => {
-              return [8, 9].indexOf(data.props.analysisTypeId) >= 0;
+              return [8, 9, 30].indexOf(data.props.analysisTypeId) >= 0;
             },
             defaultValue: 12,
           },
@@ -641,7 +670,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             label: 'Forecasting periods',
             type: 'integer',
             show: (data) => {
-              return [9].indexOf(data.props.analysisTypeId) >= 0;
+              return [9, 30].indexOf(data.props.analysisTypeId) >= 0;
             },
             defaultValue: 12,
           },
@@ -731,6 +760,86 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
             defaultValue: 0,
             show: (data) => {
               return [9].indexOf(data.props.analysisTypeId) >= 0 && data.props.autoARIMA === false;
+            },
+          },
+          // HoltWinters
+          displayHoltWintersParams: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Display Holt-Winters parameters',
+            ref: 'props.displayHoltWintersParams',
+            options: [{
+              value: false,
+              label: 'Off',
+            }, {
+              value: true,
+              label: 'On',
+            }],
+            defaultValue: false,
+            show: (data) => {
+              return [30].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
+          autoHoltWinters: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Parameter settings',
+            ref: 'props.autoHoltWinters',
+            options: [{
+              value: true,
+              label: 'Auto',
+            }, {
+              value: false,
+              label: 'Custom',
+            }],
+            defaultValue: true,
+            show: (data) => {
+              return [30].indexOf(data.props.analysisTypeId) >= 0;
+            },
+          },
+          holtWintersAlpha: {
+            ref: 'props.holtWintersAlpha',
+            label: 'Alpha',
+            type: 'integer',
+            defaultValue: 1,
+            show: (data) => {
+              return [30].indexOf(data.props.analysisTypeId) >= 0 && data.props.autoHoltWinters === false;
+            },
+          },
+          holtWintersBeta: {
+            ref: 'props.holtWintersBeta',
+            label: 'Beta',
+            type: 'integer',
+            defaultValue: 1,
+            show: (data) => {
+              return [30].indexOf(data.props.analysisTypeId) >= 0 && data.props.autoHoltWinters === false;
+            },
+          },
+          holtWintersGamma: {
+            ref: 'props.holtWintersGamma',
+            label: 'Alpha',
+            type: 'integer',
+            defaultValue: 1,
+            show: (data) => {
+              return [30].indexOf(data.props.analysisTypeId) >= 0 && data.props.autoHoltWinters === false;
+            },
+          },
+          // ARIMA and Holt-Winters
+          seasonal: {
+            type: 'string',
+            component: 'dropdown',
+            label: 'Seasonal',
+            ref: 'props.seasonal',
+            options: [{
+              value: 'mult',
+              label: 'Multiplicative',
+            }, {
+              value: 'additive',
+              label: 'Additive',
+            }],
+            defaultValue: 'additive',
+            show: (data) => {
+              return [8, 30].indexOf(data.props.analysisTypeId) >= 0;
             },
           },
           // Text mining / Wordcloud
@@ -953,6 +1062,34 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
               return ([25, 27, 29].indexOf(data.props.analysisTypeId) >= 0 && data.props.splitDataset === true) || ([26, 28].indexOf(data.props.analysisTypeId) >= 0);
             },
           },
+          // *****
+          // Analysis Options
+          // *****
+          debugMode: {
+            type: 'boolean',
+            component: 'switch',
+            label: 'Debug mode',
+            ref: 'props.debugMode',
+            options: [{
+              value: false,
+              label: 'Off',
+            }, {
+              value: true,
+              label: 'On',
+            }],
+            defaultValue: false,
+            show: (data) => {
+              return (enableDebugMode);
+            },
+          },
+          debugModeLink: {
+            label: 'What is debug mode?',
+            component: 'link',
+            url: 'https://github.com/mhamano/advanced-analytics-toolbox/blob/master/docs/debugmode.md',
+            show: (data) => {
+              return (enableDebugMode);
+            },
+          },
         },
       },
       settings: {
@@ -975,7 +1112,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: 'none',
                 show: (data) => {
-                  return [0, 6, 8, 9, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 6, 8, 9, 17, 20, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               datapoints: {
@@ -984,7 +1121,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 ref: 'props.datapoints',
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 6, 8, 9, 17, 20].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 6, 8, 9, 17, 20, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               borderWidth: {
@@ -997,7 +1134,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 1,
                 show: (data) => {
-                  return [0, 6, 8, 9, 15, 17, 20, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 6, 8, 9, 15, 17, 20, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               pointRadius: {
@@ -1010,7 +1147,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 6,
                 show: (data) => {
-                  return [0, 6, 8, 9, 15, 17, 20, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 6, 8, 9, 15, 17, 20, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               bubbleSize: {
@@ -1036,7 +1173,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 10,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               marginBottom: {
@@ -1049,7 +1186,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 10,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               marginRight: {
@@ -1062,7 +1199,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 10,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               marginLeft: {
@@ -1075,7 +1212,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 step: 1,
                 defaultValue: 10,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 14, 15, 16, 17, 19, 20, 23, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               defineScreenSize: {
@@ -1133,7 +1270,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               // colorBy: {
@@ -1159,7 +1296,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 type: 'integer',
                 defaultValue: 3,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25, 29].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
+                  return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25, 29, 30].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
                 },
               },
               colorForSub: {
@@ -1169,7 +1306,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 type: 'integer',
                 defaultValue: 7,
                 show: (data) => {
-                  return [0, 1, 9, 17, 19, 20].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
+                  return [0, 1, 9, 17, 19, 20, 30].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
                 },
               },
               showLegend: {
@@ -1186,7 +1323,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 16, 17, 19, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 16, 17, 19, 20, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
             },
@@ -1209,7 +1346,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 1, 9, 10, 16, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 16, 17, 20, 24, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xAxisPosition: {
@@ -1226,7 +1363,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: 'bottom',
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 17, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 17, 20, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xScale: {
@@ -1243,7 +1380,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 20, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               xAxisType: {
@@ -1292,7 +1429,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: false,
                 show: (data) => {
-                  return [0, 1, 9, 10, 16, 17, 20, 24].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 16, 17, 20, 24, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               yAxisPosition: {
@@ -1309,7 +1446,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: 'left',
                 show: (data) => {
-                  return [0, 1, 9, 10, 15, 17, 20, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 9, 10, 15, 17, 20, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
               yScale: {
@@ -1326,7 +1463,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 }],
                 defaultValue: true,
                 show: (data) => {
-                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 24, 29].indexOf(data.props.analysisTypeId) >= 0;
+                  return [0, 1, 6, 8, 9, 10, 15, 17, 19, 24, 29, 30].indexOf(data.props.analysisTypeId) >= 0;
                 },
               },
             },

@@ -17,10 +17,14 @@ define([
       // Display loader
       // utils.displayLoader($scope.extId);
 
-      const dimension = utils.validateDimension(layout.props.dimensions[0]);
-
       // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimension = utils.validateDimension(layout.props.dimensions[0]);
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
 
       const meaLen = layout.props.measures.length;
       $scope.rowsLabel = [utils.validateMeasure(layout.props.measures[0])]; // Label for dimension values
@@ -40,10 +44,19 @@ define([
         }
       }
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_pca.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); pca_result<-prcomp(data.frame(${meaList}), center = TRUE, scale = TRUE); json<-toJSON(list(summary(pca_result)$importance, summary(pca_result)$rotation)); json;',${params})`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); pca_result<-prcomp(data.frame(${meaList}), center = TRUE, scale = TRUE); json<-toJSON(list(summary(pca_result)$importance, summary(pca_result)$rotation)); json;',${params})`,
+            qDef: defMea1,
           },
         },
         {
@@ -114,12 +127,15 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
           const importance = result[0];
           const rotation = result[1];
 
           // Table header
-          let header = '<table border="1"><thead><tr><th></th>';
+          let header = '<table class="simple"><thead><tr><th></th>';
           for(let i = 0; i < importance[0].length; i++) {
             header += `<th>PC${i + 1}</th>`;
           }

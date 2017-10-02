@@ -28,31 +28,42 @@ define([
         },
       ];
       const dimension1 = utils.validateDimension(layout.props.dimensions[1]);
+
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_textmining_wordcloud.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('S','
+               ${saveRDataset}
+               library(tm);
+               library(jsonlite);
+               library(SnowballC);
+               counter <- 1:length(q$text);
+               res <- c();
+               for(i in counter) res <- paste(res, q$text[i]);
+               corpus<-VCorpus(VectorSource(res));
+               tdm <- TermDocumentMatrix(corpus, control = list(
+                 tolower = ${layout.props.tolower},
+                 removeNumbers = ${layout.props.removeNumbers},
+                 stopwords = ${layout.props.stopwords},
+                 removePunctuation = ${layout.props.removePunctuation},
+                 stemming = ${layout.props.stemming}
+               ));
+               m <-as.matrix(tdm)
+               sorted<-m[order(m[,1], decreasing=T),];
+               x<-list(names(sorted)[1:${layout.props.numOfFrequentTerms}], sorted[1:${layout.props.numOfFrequentTerms}]);
+               json<-toJSON(x, pretty=T);
+               json;
+             ', ${dimension1} AS text)`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
             qLabel: 'Result',
-            qDef: `R.ScriptEvalExStr('S','
-                     library(tm);
-                     library(jsonlite);
-                     library(SnowballC);
-                     counter <- 1:length(q$text);
-                     res <- c();
-                     for(i in counter) res <- paste(res, q$text[i]);
-                     corpus<-VCorpus(VectorSource(res));
-                     tdm <- TermDocumentMatrix(corpus, control = list(
-                       tolower = ${layout.props.tolower},
-                       removeNumbers = ${layout.props.removeNumbers},
-                       stopwords = ${layout.props.stopwords},
-                       removePunctuation = ${layout.props.removePunctuation},
-                       stemming = ${layout.props.stemming}
-                     ));
-                     m <-as.matrix(tdm)
-                     sorted<-m[order(m[,1], decreasing=T),];
-                     x<-list(names(sorted)[1:${layout.props.numOfFrequentTerms}], sorted[1:${layout.props.numOfFrequentTerms}]);
-                     json<-toJSON(x, pretty=T);
-                     json;
-                   ', ${dimension1} AS text)`,
+            qDef: defMea1,
           },
         },
         {
@@ -122,6 +133,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const palette = utils.getDefaultPaletteColor();
 
           const text = JSON.parse(dataPages[0].qMatrix[0][1].qText)[0];

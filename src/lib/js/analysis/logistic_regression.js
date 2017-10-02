@@ -17,10 +17,14 @@ define([
       // Display loader
       // utils.displayLoader($scope.extId);
 
-      const dimension = utils.validateDimension(layout.props.dimensions[0]);
-
       // Set definitions for dimensions and measures
-      const dimensions = [{ qDef: { qFieldDefs: [dimension] } }];
+      const dimension = utils.validateDimension(layout.props.dimensions[0]);
+      const dimensions = [{
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension]
+        },
+      }];
 
       const meaLen = layout.props.measures.length;
       $scope.rowsLabel = ['(Intercept)', (layout.props.measures[1].label != '') ? layout.props.measures[1].label : utils.validateMeasure(layout.props.measures[0]) ]; // Label for dimension values
@@ -43,12 +47,21 @@ define([
       // Split dataset into training and test datasets
       const splitData = utils.splitData(layout.props.splitDataset, layout.props.splitPercentage, meaLen);
 
+      // Debug mode - set R dataset name to store the q data.
+      utils.displayDebugModeMessage(layout.props.debugMode);
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_logistic_regression.rda');
+
+      const defMea1 = `R.ScriptEvalExStr('${dataType}','${saveRDataset} library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));lm_summary <- summary(lm_result);
+      json <- toJSON(list(coef(lm_summary)[,"Estimate"], coef(lm_summary)[,"Std. Error"], coef(lm_summary)[,"z value"], coef(lm_summary)[,"Pr(>|z|)"],
+      as.double(summary(lm_summary$deviance.resid)), lm_summary$dispersion, lm_summary$null.deviance, lm_summary$df.null, lm_summary$deviance, lm_summary$df.residual, lm_summary$aic, lm_summary$iter)); json;',${params})`;
+
+      // Debug mode - display R Scripts to console
+      utils.displayRScriptsToConsole(layout.props.debugMode, [defMea1]);
+
       const measures = [
         {
           qDef: {
-            qDef: `R.ScriptEvalExStr('${dataType}','library(jsonlite); ${splitData} lm_result <- glm(${meaList}, data=training_data, family=binomial(link="logit"));lm_summary <- summary(lm_result);
-            json <- toJSON(list(coef(lm_summary)[,"Estimate"], coef(lm_summary)[,"Std. Error"], coef(lm_summary)[,"z value"], coef(lm_summary)[,"Pr(>|z|)"],
-            as.double(summary(lm_summary$deviance.resid)), lm_summary$dispersion, lm_summary$null.deviance, lm_summary$df.null, lm_summary$deviance, lm_summary$df.residual, lm_summary$aic, lm_summary$iter)); json;',${params})`,
+            qDef: defMea1,
           },
         },
         {
@@ -119,6 +132,9 @@ define([
         if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
+          // Debug mode - display returned dataset to console
+          utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
+
           const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
 
           const estimate = result[0];
