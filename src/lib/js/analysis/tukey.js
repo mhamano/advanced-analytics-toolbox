@@ -19,11 +19,18 @@ define([
       // utils.displayLoader($scope.extId);
 
       // Set definitions for dimensions and measures
-      const dimension = utils.validateDimension(layout.props.dimensions[0]);
+      const dimension0 = utils.validateDimension(layout.props.dimensions[0]);
+      const dimension1 = utils.validateDimension(layout.props.dimensions[1]);
       const dimensions = [{
         qNullSuppression: true,
         qDef: {
-          qFieldDefs: [dimension]
+          qFieldDefs: [dimension0]
+        },
+      },
+      {
+        qNullSuppression: true,
+        qDef: {
+          qFieldDefs: [dimension1]
         },
       }];
 
@@ -116,13 +123,13 @@ define([
         const measureInfo = $scope.layout.qHyperCube.qMeasureInfo;
 
         // Display error when all measures' grand total return NaN.
-        if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
+        if (dataPages[0].qMatrix[0][2].qText.length === 0 || dataPages[0].qMatrix[0][2].qText == '-') {
           utils.displayConnectionError($scope.extId);
         } else {
           // Debug mode - display returned dataset to console
           utils.displayReturnedDatasetToConsole(layout.props.debugMode, dataPages[0]);
 
-          const result = JSON.parse(dataPages[0].qMatrix[0][1].qText);
+          const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
 
           const rownames = result[0];
           const data = result[1];
