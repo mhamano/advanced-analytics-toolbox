@@ -405,7 +405,7 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                         },
                     },
                     // line color
-                    limitcolor: {
+                    fixlimitcolor: {
                         label: 'Color',
                         component: 'color-picker',
                         ref: 'props.limitcolor',
