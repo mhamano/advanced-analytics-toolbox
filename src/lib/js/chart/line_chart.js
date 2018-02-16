@@ -74,7 +74,7 @@ define([
       chart.on('plotly_selected', (eventData) => {
         if (typeof eventData != 'undefined' && eventData.points.length > 0) {
           const fields = eventData.points.map((d) => {
-            return parseInt(eventData.points[0].data.elemNum[d.pointNumber], 10);
+            return parseInt(d.pointNumber, 10);
           });
           // app.field(dimension).selectValues(fields, true, true);
           $scope.backendApi.selectValues(0, fields, true);
