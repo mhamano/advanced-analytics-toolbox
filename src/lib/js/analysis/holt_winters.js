@@ -43,7 +43,7 @@ define([
 
       // Debug mode - set R dataset name to store the q data.
       utils.displayDebugModeMessage(layout.props.debugMode);
-      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_timeseries_forecast.rda');
+      const saveRDataset = utils.getDebugSaveDatasetScript(layout.props.debugMode, 'debug_holt_winters.rda');
 
       const defMea1 = `R.ScriptEvalExStr('N', '${saveRDataset} library(jsonlite);library(dplyr);library(forecast);data<-ts(na.omit(q$Measure) ${frequency});
       fit<-HoltWinters(data, seasonal="${layout.props.seasonal}" ${holtWintersParams});
