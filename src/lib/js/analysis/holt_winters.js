@@ -26,7 +26,10 @@ define([
       const dimensions = [{
         qNullSuppression: true,
         qDef: {
-          qFieldDefs: [dimension]
+          qFieldDefs: [dimension],
+          qSortCriterias: [{
+            qSortByNumeric: 1,
+          }],
         },
       }];
       const measure = utils.validateMeasure(layout.props.measures[0]);
@@ -121,7 +124,22 @@ define([
       }];
 
       $scope.backendApi.getData(requestPage).then((dataPages) => {
-        if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
+        let result = null;
+        const qMatrix = dataPages[0].qMatrix;
+        console.log(qMatrix)
+
+        // Check the result returned from R
+        if (qMatrix[0][2].qText.length === 0 || qMatrix[0][2].qText == '-') {
+          for (let i = 0; i < qMatrix.length; i++) {
+            if (qMatrix[i][2].qText.length !== 0 && qMatrix[i][2].qText !== '-') {
+              result = JSON.parse(qMatrix[i][2].qText);
+            }
+          }
+        } else {
+          result = JSON.parse(qMatrix[0][2].qText);
+        }
+
+        if (result == null) {
           utils.displayConnectionError($scope.extId);
         } else {
           // Debug mode - display returned dataset to console
@@ -129,7 +147,7 @@ define([
 
           const palette = utils.getDefaultPaletteColor();
 
-          const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
+          // const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
           const mean = result[0];
           const upper = result[1];
           const lower = result[2];
@@ -142,7 +160,6 @@ define([
 
           // Chart mode
           if (typeof $scope.layout.props.displayTable == 'undefined' || $scope.layout.props.displayTable == false) {
-
             const datasets = {};
 
             // Store actual values to datasets
@@ -182,7 +199,7 @@ define([
                 elemNum: datasets.elemNum,
                 name: 'Observed',
                 mode: 'lines+markers',
-                fill:  layout.props.line,
+                fill: layout.props.line,
                 fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${palette[layout.props.colorForMain]},0.3)`,
                 marker: {
                   color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
@@ -236,14 +253,14 @@ define([
             };
 
             if (layout.props.displayHoltWintersParams) {
-              // Display ARIMA parameters
+              // Display Holtwiters parameters
               $(`.advanced-analytics-toolsets-${$scope.extId}`)
               .html(`
                 <div style="width:100%;height:5%;text-align:right;">alpha=${alpha}, beta=${beta}, gamma=${gamma}</div>
                 <div id="aat-chart-${$scope.extId}" style="width:100%;height:95%;"></div>
               `);
             } else {
-              // Hide ARIM parameters
+              // Hide Holtwiters parameters
               $(`.advanced-analytics-toolsets-${$scope.extId}`).html(`<div id="aat-chart-${$scope.extId}" style="width:100%;height:100%;"></div>`);
             }
             const chart = lineChart.draw($scope, chartData, `aat-chart-${$scope.extId}`, customOptions);
