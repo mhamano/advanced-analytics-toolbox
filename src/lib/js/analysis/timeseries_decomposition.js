@@ -23,7 +23,10 @@ define([
       const dimensions = [{
         qNullSuppression: true,
         qDef: {
-          qFieldDefs: [dimension]
+          qFieldDefs: [dimension],
+          qSortCriterias: [{
+            qSortByNumeric: 1,
+          }],
         },
       }];
 
