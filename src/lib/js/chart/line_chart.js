@@ -66,17 +66,21 @@ define([
       chart.on('plotly_click', (eventData) => {
         if (typeof eventData != 'undefined' && eventData.points.length > 0) {
           const pointNumber = eventData.points[0].pointNumber;
-          const fields = [parseInt(eventData.points[0].data.elemNum[pointNumber], 10)];
-          $scope.self.selectValues(0, fields, true);
+          if (typeof eventData.points[0].data.elemNum != 'undefined') {
+            const fields = [parseInt(eventData.points[0].data.elemNum[pointNumber], 10)];
+            $scope.self.selectValues(0, fields, true);
+          }
         }
       });
 
       chart.on('plotly_selected', (eventData) => {
         if (typeof eventData != 'undefined' && eventData.points.length > 0) {
-          const fields = eventData.points.map((d) => {
+          const fields = eventData.points.filter((d) => {
+            // return true when not NaN
+            return typeof eventData.points[0].data.elemNum[d.pointNumber] != 'undefined';
+          }).map((d) => {
             return parseInt(eventData.points[0].data.elemNum[d.pointNumber], 10);
           });
-          // app.field(dimension).selectValues(fields, true, true);
           $scope.backendApi.selectValues(0, fields, true);
         }
       });
