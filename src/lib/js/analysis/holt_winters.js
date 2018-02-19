@@ -126,7 +126,6 @@ define([
       $scope.backendApi.getData(requestPage).then((dataPages) => {
         let result = null;
         const qMatrix = dataPages[0].qMatrix;
-        console.log(qMatrix)
 
         // Check the result returned from R
         if (qMatrix[0][2].qText.length === 0 || qMatrix[0][2].qText == '-') {
@@ -147,7 +146,6 @@ define([
 
           const palette = utils.getDefaultPaletteColor();
 
-          // const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
           const mean = result[0];
           const upper = result[1];
           const lower = result[2];
