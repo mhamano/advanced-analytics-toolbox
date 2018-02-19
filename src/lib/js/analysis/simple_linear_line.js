@@ -131,7 +131,21 @@ define([
         const measureInfo = $scope.layout.qHyperCube.qMeasureInfo;
 
         // Display error when all measures' grand total return NaN.
-        if (dataPages[0].qMatrix[0][1].qText.length === 0 || dataPages[0].qMatrix[0][1].qText == '-') {
+        let result = null;
+        const qMatrix = dataPages[0].qMatrix;
+
+        // Check the result returned from R
+        if (qMatrix[0][2].qText.length === 0 || qMatrix[0][2].qText == '-') {
+          for (let i = 0; i < qMatrix.length; i++) {
+            if (qMatrix[i][2].qText.length !== 0 && qMatrix[i][2].qText !== '-') {
+              result = JSON.parse(qMatrix[i][2].qText);
+            }
+          }
+        } else {
+          result = JSON.parse(qMatrix[0][2].qText);
+        }
+
+        if (result == null) {
           utils.displayConnectionError($scope.extId);
         } else {
           // Debug mode - display returned dataset to console
@@ -139,7 +153,6 @@ define([
 
           const palette = utils.getDefaultPaletteColor();
 
-          const result = JSON.parse(dataPages[0].qMatrix[0][2].qText);
           const mean = result[0];
           const lower = result[1];
           const upper = result[2];
