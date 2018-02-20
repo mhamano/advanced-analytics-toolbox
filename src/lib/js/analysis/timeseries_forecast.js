@@ -152,6 +152,8 @@ define([
           const upper = result[1];
           const lower = result[2];
           const arimaorder = result[3];
+          // const for reference line
+          const mylimit = layout.props.limit;
 
           // Chart mode
           if (typeof $scope.layout.props.displayTable == 'undefined' || $scope.layout.props.displayTable == false) {
@@ -176,16 +178,19 @@ define([
             const mea2 = new Array(dataLength); // Forecast (mean)
             const mea3 = new Array(dataLength); // Forecast (upper)
             const mea4 = new Array(dataLength); // Forecast (lower)
+            const mea5 = new Array(dataLength); // Forecast - Reference Line
 
             for (let i = 0; i < layout.props.forecastingPeriods; i++) {
               datasets.dim1.push(`+${i + 1}`); // Forecast period is displayed as +1, +2, +3...
               mea2.push(mean[i]);
               mea3.push(upper[i]);
               mea4.push(lower[i]);
+              mea5.push(mylimit);
             }
             datasets.mea2 = mea2;
             datasets.mea3 = mea3;
             datasets.mea4 = mea4;
+            datasets.mea5 = mea5;
 
             // Calculate ARIMA order
             let arima = '';
@@ -248,6 +253,21 @@ define([
                 type: 'scatter',
                 mode: 'none',
               },
+            //Reference line
+            {
+              x: datasets.dim1,
+              y: datasets.mea5,
+              name: layout.props.limitlabel,
+              mode: 'lines',
+              marker: {
+                color: `rgba(${palette[layout.props.limitcolor]},1)`,
+                size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
+              },
+              line: {
+                dash: layout.props.limitstyle,
+                width: layout.props.limitwidth,
+               },
+           },  
             ];
 
             const customOptions = {

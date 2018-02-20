@@ -344,6 +344,87 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
           dataHandling: {
             uses: 'dataHandling',
           },
+          // Section for Reference Line
+            ReferenceLine: {
+                label: 'Reference Line',
+                items: {
+                    fixlimit: {
+                        ref: 'props.limit',
+                        label: 'Limit',
+                        type: 'integer',
+                        defaultValue: "",
+                        show: (data) => {
+                            return [9].indexOf(data.props.analysisTypeId) >= 0;
+                        },
+                    },
+                    fixlimitlabel:{
+                      type:'string',
+                      label:'Label',
+                      ref:'props.limitlabel',
+                      defaultValue:'Reference Line',
+                      show:(data)=>{
+                        return[9].indexOf(data.props.analysisTypeId)>=0;
+                      },
+                    },
+                    //line style
+                    fixlimitstyle: {
+                        type: 'string',
+                        label: 'Line style',
+                        component: 'dropdown',
+                        ref: 'props.limitstyle',
+                        options: [{
+                            value: 'lines',
+                            label: 'lines',
+                        }, {
+                            value: 'dashdot',
+                            label: 'dashdot',
+                        }, {
+                            value: 'solid',
+                            label: 'solid',
+                        }, {
+                            value: 'dot',
+                            label: 'dot',
+                        }],
+                        defaultValue: 'lines',
+                        show: (data) => {
+                            return [9].indexOf(data.props.analysisTypeId) >= 0;
+                        },
+                    },
+                    //line width
+                    fixlimitwidth: {
+                        type: 'string',
+                        label: 'Line Width',
+                        component: 'dropdown',
+                        ref: 'props.limitwidth',
+                        options: [{
+                            value: '1',
+                            label: 'tiny',
+                        }, {
+                            value: '2',
+                            label: 'mid',
+                        }, {
+                            value: '4',
+                            label: 'huge',
+                        }],
+                        defaultValue: '1',
+                        show: (data) => {
+                            return [9].indexOf(data.props.analysisTypeId) >= 0;
+                        },
+                    },
+                    // line color
+                    fixlimitcolor: {
+                        label: 'Color',
+                        component: 'color-picker',
+                        ref: 'props.limitcolor',
+                        type: 'integer',
+                        defaultValue: 11,
+                        show: (data) => {
+                            return [9].indexOf(data.props.analysisTypeId) >= 0;
+                        },
+                    },
+                },
+            },
+          //end of section for Reference line
         },
       },
       analysis: {
