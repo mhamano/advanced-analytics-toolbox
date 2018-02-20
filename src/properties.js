@@ -221,13 +221,20 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
       sorting: {
         type: 'items',
         label: 'Sorting',
-        show: (data) => {
-          return [0, 17].indexOf(data.props.analysisTypeId) >= 0;
-        },
         items: {
+          sortMessage: {
+            label: 'Sort function is not provided for this analysis type. Sort the data source or perform sort in the load script.',
+            component: 'text',
+            show: (data) => {
+              return [0, 17].indexOf(data.props.analysisTypeId) < 0;
+            },
+          },
           sortDim: {
             type: 'items',
             label: 'Dimension',
+            show: (data) => {
+              return [0, 17].indexOf(data.props.analysisTypeId) >= 0;
+            },
             items: {
               dimSort: {
                 type: 'boolean',
