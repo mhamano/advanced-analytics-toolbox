@@ -1,7 +1,7 @@
 define([
   '../analysis/analysis',
   './ui_element',
-  '../../../../../../resources/assets/external/leonardo-ui/leonardo-ui.min.js',
+  '../../vendor/leonardo-ui.min',
   'ng!$q',
 ], (analysisTypes, uiElement, leonardoui, $q) => {
   return {
