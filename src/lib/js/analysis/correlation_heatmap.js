@@ -27,8 +27,6 @@ define([
         },
       }];
 
-      console.log(layout.props)
-
       const meaLen = layout.props.measures.length;
       $scope.rowsLabel = [layout.props.measures[0].label]; // Label for dimension values
       let params = `${utils.validateMeasure(layout.props.measures[0])} as mea0`;
@@ -47,8 +45,6 @@ define([
           $scope.rowsLabel.push(layout.props.measures[i].label);
         }
       }
-
-      console.log($scope.rowsLabel)
 
       // Debug mode - set R dataset name to store the q data.
       utils.displayDebugModeMessage(layout.props.debugMode);
