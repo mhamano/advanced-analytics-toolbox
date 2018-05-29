@@ -175,7 +175,7 @@ define([
               mode: 'markers',
               type: 'scatter',
               marker: {
-                color: (layout.props.colors) ? `rgba(${palette[3]},0.8)` : `rgba(${palette[layout.props.colorForMain]},0.8)`,
+                color: (layout.props.colors) ? `rgba(${palette[3]},0.8)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 0.8)})`,
                 size: layout.props.bubbleSize,
               },
             },
@@ -252,7 +252,7 @@ define([
                 axref: 'x',
                 ayref: 'y',
                 showarrow: true,
-                arrowcolor: `rgba(${palette[layout.props.colorForSub]},1)`,
+                arrowcolor: (layout.props.colors) ? `rgba(${palette[7]}, 1)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 1)})`,
                 arrowhead: 3,
               },
               {
@@ -260,7 +260,7 @@ define([
                 y: arrowY[i],
                 text: $scope.rowsLabel[i],
                 font: {
-                  color: `rgba(${palette[layout.props.colorForSub]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[7]}, 1)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 1)})`,
                 },
                 showarrow: false,
               }

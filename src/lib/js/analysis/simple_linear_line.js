@@ -200,9 +200,9 @@ define([
                 name: 'Observed',
                 mode: 'lines+markers',
                 fill:  layout.props.line,
-                fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${palette[layout.props.colorForMain]},0.3)`,
+                fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
                 marker: {
-                  color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
                   size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
                 },
                 line: {
@@ -214,7 +214,7 @@ define([
                 y: mean,
                 name: 'Fit',
                 line: {
-                  color: `rgba(${palette[layout.props.colorForSub]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[7]}, 1)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 1)})`,
                 },
               },
               {
@@ -222,7 +222,7 @@ define([
                 y: lower,
                 name: 'Lower',
                 fill: 'tonexty',
-                fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+                fillcolor: (layout.props.colors) ? `rgba(${palette[7]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 0.3)})`,
                 type: 'scatter',
                 mode: 'none',
               },
@@ -231,7 +231,7 @@ define([
                 y: upper,
                 name: 'Upper',
                 fill: 'tonexty',
-                fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+                fillcolor: (layout.props.colors) ? `rgba(${palette[7]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 0.3)})`,
                 type: 'scatter',
                 mode: 'none',
               },

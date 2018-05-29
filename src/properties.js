@@ -416,8 +416,11 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                         label: 'Color',
                         component: 'color-picker',
                         ref: 'props.limitcolor',
-                        type: 'integer',
-                        defaultValue: 11,
+                        type: 'object',
+                        defaultValue: {
+                          index: 11,
+                          color: "#000000"  
+                        },
                         show: (data) => {
                             return [9].indexOf(data.props.analysisTypeId) >= 0;
                         },
@@ -1381,8 +1384,11 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 label: 'Color',
                 component: 'color-picker',
                 ref: 'props.colorForMain',
-                type: 'integer',
-                defaultValue: 3,
+                type: 'object',
+                defaultValue: {
+                  index: 3,
+                  color: "#4477aa"
+                },
                 show: (data) => {
                   return [0, 1, 6, 8, 9, 15, 17, 19, 20, 25, 29, 30].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
                 },
@@ -1391,8 +1397,11 @@ define(['./lib/js/analysis/analysis', 'qlik', 'ng!$q'], (analysis, qlik, $q) => 
                 label: 'Color (Trend/Forecast)',
                 component: 'color-picker',
                 ref: 'props.colorForSub',
-                type: 'integer',
-                defaultValue: 7,
+                type: 'object',
+                defaultValue: {
+                  index: 7,
+                  color: "#f93f17"
+                },
                 show: (data) => {
                   return [0, 1, 9, 17, 19, 20, 30].indexOf(data.props.analysisTypeId) >= 0 && data.props.colors === false;
                 },

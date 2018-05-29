@@ -212,9 +212,9 @@ define([
                 name: 'Observed',
                 mode: 'lines+markers',
                 fill: layout.props.line,
-                fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${palette[layout.props.colorForMain]},0.3)`,
+                fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
                 marker: {
-                  color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
                   size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
                 },
                 line: {
@@ -227,7 +227,7 @@ define([
                 name: 'Fit',
                 mode: 'lines+markers',
                 marker: {
-                  color: (layout.props.colors) ? `rgba(${palette[7]},1)` : `rgba(${palette[layout.props.colorForSub]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[7]},1)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 1)})`,
                   size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
                 },
                 line: {
@@ -240,7 +240,7 @@ define([
                 y: datasets.mea3,
                 name: 'Upper',
                 fill: 'tonexty',
-                fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+                fillcolor: (layout.props.colors) ? `rgba(${palette[7]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 0.3)})`,
                 type: 'scatter',
                 mode: 'none',
               },
@@ -249,7 +249,7 @@ define([
                 y: datasets.mea4,
                 name: 'Lower',
                 fill: 'tonexty',
-                fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+                fillcolor: (layout.props.colors) ? `rgba(${palette[7]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 0.3)})`,
                 type: 'scatter',
                 mode: 'none',
               },
@@ -260,14 +260,14 @@ define([
               name: layout.props.limitlabel,
               mode: 'lines',
               marker: {
-                color: `rgba(${palette[layout.props.limitcolor]},1)`,
+                color: `rgba(${utils.getConversionRgba(layout.props.limitcolor.color, 1)})`,
                 size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
               },
               line: {
                 dash: layout.props.limitstyle,
                 width: layout.props.limitwidth,
                },
-           },  
+           },
             ];
 
             const customOptions = {

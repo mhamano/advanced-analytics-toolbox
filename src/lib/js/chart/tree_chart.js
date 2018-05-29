@@ -57,11 +57,10 @@ define([
       // Make RGB color lighter or barker
       function makeColorsLighterDarker(c,n,i,d) {for(i=3;i--;c[i]=d<0?0:d>255?255:d|0)d=c[i]+n;return c.join(','); }
       const colorDefault = makeColorsLighterDarker(palette[3].split(',').map(Number), 100);
-      const colorForMain = makeColorsLighterDarker(palette[$scope.layout.props.colorForMain].split(',').map(Number), 100);
 
       // Color selection
-      const color = ($scope.layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[$scope.layout.props.colorForMain]},1)`;
-      const colorOpaque = ($scope.layout.props.colors) ? `rgba(${colorDefault},1)` : `rgba(${colorForMain},1)`;
+      const color = ($scope.layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${utils.getConversionRgba($scope.layout.props.colorForMain.color, 1)})`;
+      const colorOpaque = ($scope.layout.props.colors) ? `rgba(${colorDefault},1)` : `rgba(${utils.getConversionRgba($scope.layout.props.colorForMain.color, 1)})`;
 
       // Creates a curved (diagonal) path from parent to the child nodes
       function diagonal(s, d) {

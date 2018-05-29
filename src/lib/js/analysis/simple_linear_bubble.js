@@ -174,7 +174,7 @@ define([
               mode: 'markers',
               type: 'scatter',
               marker: {
-                color: (layout.props.colors) ? `rgba(${palette[3]},0.8)` : `rgba(${palette[layout.props.colorForMain]},0.8)`,
+                color: (layout.props.colors) ? `rgba(${palette[3]},0.8)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 0.8)})`,
                 size: layout.props.bubbleSize,
               },
             },
@@ -183,7 +183,7 @@ define([
               y: mea3,
               name: 'Fit',
               line: {
-                color: `rgba(${palette[layout.props.colorForSub]},1)`,
+                color: (layout.props.colors) ? `rgba(${palette[7]}, 1)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 1)})`,
               },
             },
             {
@@ -191,7 +191,7 @@ define([
               y: mea4,
               name: 'Lower',
               fill: 'tonexty',
-              fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+              fillcolor: (layout.props.colors) ? `rgba(${palette[7]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 0.3)})`,
               type: 'scatter',
               mode: 'none',
             },
@@ -200,7 +200,7 @@ define([
               y: mea5,
               name: 'Upper',
               fill: 'tonexty',
-              fillcolor: `rgba(${palette[layout.props.colorForSub]},0.3)`,
+              fillcolor: (layout.props.colors) ? `rgba(${palette[7]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 0.3)})`,
               type: 'scatter',
               mode: 'none',
             },

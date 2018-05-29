@@ -188,9 +188,9 @@ define([
             name: 'Observed',
             mode: 'lines+markers',
             fill: layout.props.line,
-            fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${palette[layout.props.colorForMain]},0.3)`,
+            fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
             marker: {
-              color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
+              color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
               size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
             },
             line: {
@@ -230,7 +230,7 @@ define([
                 y: b_mea1,
                 name: (i === 2) ? 'Autocorrelation' : 'Partial Autocorrelation',
                 marker: {
-                  color: `rgba(${palette[layout.props.colorForMain]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[3]}, 1)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
                 },
                 type: 'bar',
                 width: 0.3,
@@ -245,7 +245,7 @@ define([
                 name: 'Upper',
                 type: 'scatter',
                 line: {
-                  color: `rgba(${palette[layout.props.colorForSub]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[7]}, 1)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 1)})`,
                   dash: 'dash',
                 },
                 marker: {
@@ -262,7 +262,7 @@ define([
                 name: 'Lower',
                 type: 'scatter',
                 line: {
-                  color: `rgba(${palette[layout.props.colorForSub]},1)`,
+                  color: (layout.props.colors) ? `rgba(${palette[7]}, 1)` : `rgba(${utils.getConversionRgba(layout.props.colorForSub.color, 1)})`,
                   dash: 'dash',
                 },
                 marker: {

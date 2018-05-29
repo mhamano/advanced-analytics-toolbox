@@ -144,9 +144,9 @@ define([
               name: (i === 1) ? 'Observed' : (i === 2) ? 'Trend' : (i === 3) ? 'Seasonal' : (i === 4) ? 'Random' : '',
               mode: 'lines+markers',
               fill: layout.props.line,
-              fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${palette[layout.props.colorForMain]},0.3)`,
+              fillcolor: (layout.props.colors) ? `rgba(${palette[3]},0.3)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
               marker: {
-                color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${palette[layout.props.colorForMain]},1)`,
+                color: (layout.props.colors) ? `rgba(${palette[3]},1)` : `rgba(${utils.getConversionRgba(layout.props.colorForMain.color, 1)})`,
                 size: (layout.props.datapoints) ? layout.props.pointRadius : 1,
               },
               line: {

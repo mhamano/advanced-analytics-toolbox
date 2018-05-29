@@ -178,6 +178,22 @@ define([
         '118,193,70', '186,208,173'];
     },
     /**
+     * getConversionRgba - Return Hex web color
+     *
+     * @return {String} rgba code
+     */
+    getConversionRgba(color_code, alpha = 1) {
+        var rgba_code = [];
+
+        rgba_code['red']   = parseInt(color_code.substring(1,3), 16);
+        rgba_code['green'] = parseInt(color_code.substring(3,5), 16);
+        rgba_code['blue']  = parseInt(color_code.substring(5,7), 16);
+        rgba_code['alpha'] = alpha;
+        rgba_code['full']  = Object.values(rgba_code).join(',');
+
+        return rgba_code['full'];
+    },
+    /**
      * setLocaleInfo - Set locale infomation to angular $scope
      *
      * @param {Object} $scope angular $scope
